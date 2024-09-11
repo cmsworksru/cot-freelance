@@ -65,7 +65,10 @@ function cot_getcountoffersofuser($userid)
 	list($year, $month, $day) = explode('-', @date('Y-m-d', $sys['now_offset']));
 	$currentday = cot_mktime(0, 0, 0, $month, $day, $year);
 
-	$sql = $db->query("SELECT COUNT(*) as count FROM $db_projects_offers WHERE offer_userid=" . $userid . " AND offer_date<" . $sys['now_offset'] . " AND offer_date>" . $currentday . "");
+	$sql = $db->query(
+        "SELECT COUNT(*) as count FROM $db_projects_offers "
+        . " WHERE offer_userid=" . $userid . " AND offer_date<" . Cot::$sys['now'] . " AND offer_date>" . $currentday
+    );
 	$count = $sql->fetchColumn();
 
 	return $count;
