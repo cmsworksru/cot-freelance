@@ -22,9 +22,9 @@ require_once cot_incfile('market', 'module');
 list($usr['auth_read'], $usr['auth_write'], $usr['isadmin']) = cot_auth('market', 'any');
 cot_block($usr['isadmin']);
 
-$adminpath[] = array(cot_url('admin', 'm=extensions'), $L['Extensions']);
-$adminpath[] = array(cot_url('admin', 'm=extensions&a=details&mod='.$m), $cot_modules[$m]['title']);
-$adminpath[] = array(cot_url('admin', 'm='.$m), $L['Administration']);
+$adminPath[] = array(cot_url('admin', 'm=extensions'), $L['Extensions']);
+$adminPath[] = array(cot_url('admin', 'm=extensions&a=details&mod='.$m), $cot_modules[$m]['title']);
+$adminPath[] = array(cot_url('admin', 'm='.$m), $L['Administration']);
 
 if (!in_array($p, array('default')))
 {

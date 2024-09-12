@@ -12,7 +12,7 @@
 
 defined('COT_CODE') or die('Wrong URL');
 
-$adminpath[] = array(cot_url('admin', 'm=' . $m . '&p=' . $p), $L['projects_types_edit']);
+$adminPath[] = array(cot_url('admin', 'm=' . $m . '&p=' . $p), $L['projects_types_edit']);
 
 list($pn, $d, $d_url) = cot_import_pagenav('d', $cfg['maxrowsperpage']);
 $a = cot_import('a', 'G', 'TXT');

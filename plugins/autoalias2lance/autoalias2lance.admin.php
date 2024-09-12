@@ -59,4 +59,4 @@ $t->assign(array(
 cot_display_messages($t);
 
 $t->parse();
-$plugin_body = $t->text('MAIN');
+$pluginBody = $t->text('MAIN');

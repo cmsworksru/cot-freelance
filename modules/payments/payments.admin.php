@@ -28,10 +28,10 @@ $t = new XTemplate(cot_tplfile('payments.admin', 'module', true));
 
 require_once cot_incfile('payments', 'module');
 
-$adminpath[] = array(cot_url('admin', 'm=extensions'), $L['Extensions']);
-$adminpath[] = array(cot_url('admin', 'm=extensions&a=details&mod='.$m), $cot_modules[$m]['title']);
-$adminpath[] = array(cot_url('admin', 'm='.$m), $L['Administration']);
-$adminhelp = $L['adm_help_payments'];
+$adminPath[] = array(cot_url('admin', 'm=extensions'), $L['Extensions']);
+$adminPath[] = array(cot_url('admin', 'm=extensions&a=details&mod='.$m), $cot_modules[$m]['title']);
+$adminPath[] = array(cot_url('admin', 'm='.$m), $L['Administration']);
+$adminHelp = $L['adm_help_payments'];
 
 if($p == 'payouts')
 {

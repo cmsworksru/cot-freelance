@@ -65,24 +65,24 @@ if (empty($m))
 }
 elseif ($m == 'success')
 {
-	$plugin_body = $L['wmbilling_error_incorrect'];
+	$pluginBody = $L['wmbilling_error_incorrect'];
 
 	if (isset($_GET['LMI_PAYMENT_NO']) && preg_match('/^\d+$/', $_GET['LMI_PAYMENT_NO']) == 1)
 	{
 		$pinfo = cot_payments_payinfo($_GET['LMI_PAYMENT_NO']);
 		if ($pinfo['pay_status'] == 'done')
 		{
-			$plugin_body = $L['wmbilling_error_done'];
+			$pluginBody = $L['wmbilling_error_done'];
 			$redirect = $pinfo['pay_redirect'];
 		}
 		elseif ($pinfo['pay_status'] == 'paid')
 		{
-			$plugin_body = $L['wmbilling_error_paid'];
+			$pluginBody = $L['wmbilling_error_paid'];
 		}
 	}
 	$t->assign(array(
 		"WEBMONEY_TITLE" => $L['wmbilling_error_title'],
-		"WEBMONEY_ERROR" => $plugin_body
+		"WEBMONEY_ERROR" => $pluginBody
 	));
 	
 	if($redirect){

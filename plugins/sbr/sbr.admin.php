@@ -115,4 +115,4 @@ foreach ($sqllist_rowset as $sbr)
 }
 
 $t->parse("MAIN");
-$plugin_body .= $t->text("MAIN");
+$pluginBody .= $t->text("MAIN");

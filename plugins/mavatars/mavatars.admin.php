@@ -18,7 +18,7 @@
 defined('COT_CODE') or die('Wrong URL');
 
 require_once cot_incfile('page', 'module');
-$adminhelp = $L['news_help'];
+$adminHelp = $L['news_help'];
 
 if ($p == 'mavatars' && $row['config_name'] == 'set' && $cfg['jquery'])
 {

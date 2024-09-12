@@ -9,7 +9,10 @@ Hooks=admin.config.edit.loop
 defined('COT_CODE') or die('Wrong URL');
 
 require_once cot_incfile('usercategories', 'plug');
-$adminhelp .= isset(cot::$L['usercategories_help']) ? cot::$L['usercategories_help'] : '';
+if (!isset($adminHelp)) {
+    $adminHelp = '';
+}
+$adminHelp .= isset(cot::$L['usercategories_help']) ? cot::$L['usercategories_help'] : '';
 
 if ($p == 'usercategories' && $row['config_name'] == 'catslimit' && $cfg['jquery'])
 {

@@ -77,12 +77,12 @@ elseif ($m == 'success')
 
 	$my_crc = strtoupper(md5("$out_summ:$inv_id:$mrh_pass1:Shp_item=$shp_item"));
 
-	$plugin_body = $L['roboxbilling_error_otkaz'];
+	$pluginBody = $L['roboxbilling_error_otkaz'];
 
 	// проверка корректности подписи
 	if ($my_crc != $crc)
 	{
-		$plugin_body = $L['roboxbilling_error_incorrect'];
+		$pluginBody = $L['roboxbilling_error_incorrect'];
 	}
 	else
 	{
@@ -92,19 +92,19 @@ elseif ($m == 'success')
 			$pinfo = cot_payments_payinfo($inv_id);
 			if ($pinfo['pay_status'] == 'done')
 			{
-				$plugin_body = $L['roboxbilling_error_done'];
+				$pluginBody = $L['roboxbilling_error_done'];
 				$redirect = $pinfo['pay_redirect'];
 			}
 			elseif ($pinfo['pay_status'] == 'paid')
 			{
-				$plugin_body = $L['roboxbilling_error_paid'];
+				$pluginBody = $L['roboxbilling_error_paid'];
 			}
 		}
 	}
 
 	$t->assign(array(
 		"ROBOX_TITLE" => $L['roboxbilling_error_title'],
-		"ROBOX_ERROR" => $plugin_body
+		"ROBOX_ERROR" => $pluginBody
 	));
 	
 	if($redirect){

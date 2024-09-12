@@ -70,42 +70,42 @@ elseif ($m == 'success')
 		$pinfo = cot_payments_payinfo($status_data['ik_pm_no']);
 		if ($pinfo['pay_status'] == 'done')
 		{
-			$plugin_body = $L['ikassabilling_error_done'];
+			$pluginBody = $L['ikassabilling_error_done'];
 			$redirect = $pinfo['pay_redirect'];
 		}
 		elseif ($pinfo['pay_status'] == 'paid')
 		{
-			$plugin_body = $L['ikassabilling_error_paid'];
+			$pluginBody = $L['ikassabilling_error_paid'];
 		}
 		elseif ($pinfo['pay_status'] == 'process')
 		{
-			$plugin_body = $L['ikassabilling_error_wait'];
+			$pluginBody = $L['ikassabilling_error_wait'];
 		}
 		else
 		{
-			$plugin_body = $L['roboxbilling_error_otkaz'];
+			$pluginBody = $L['roboxbilling_error_otkaz'];
 		}
 	}
 	elseif($status_data['ik_inv_st'] == 'waitAccept' || $status_data['ik_inv_st'] == 'process')
 	{
-		$plugin_body = $L['ikassabilling_error_wait'];
+		$pluginBody = $L['ikassabilling_error_wait'];
 	}
 	elseif($status_data['ik_inv_st'] == 'canceled')
 	{
-		$plugin_body = $L['ikassabilling_error_canceled'];
+		$pluginBody = $L['ikassabilling_error_canceled'];
 	}
 	elseif($status_data['ik_inv_st'] == 'fail')
 	{
-		$plugin_body = $L['ikassabilling_error_fail'];
+		$pluginBody = $L['ikassabilling_error_fail'];
 	}
 	else
 	{
-		$plugin_body = $L['ikassabilling_error_incorrect'];
+		$pluginBody = $L['ikassabilling_error_incorrect'];
 	}
 
 	$t->assign(array(
 		"IKASSA_TITLE" => $L['ikassabilling_error_title'],
-		"IKASSA_ERROR" => $plugin_body
+		"IKASSA_ERROR" => $pluginBody
 	));
 	
 	if($redirect){
