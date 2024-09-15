@@ -16,4 +16,3 @@ $t = new XTemplate(cot_tplfile('payments.default', 'module'));
 
 $t->parse('MAIN');
 $module_body = $t->text('MAIN');
-?>

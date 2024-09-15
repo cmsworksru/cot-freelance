@@ -1,5 +1,4 @@
 <?php
-
 /**
  * projects module
  *
@@ -10,8 +9,8 @@
  * @license BSD
  */
 
-list($usr['auth_read'], $usr['auth_write'], $usr['isadmin']) = cot_auth('projects', 'any', 'RWA');
-cot_block($usr['auth_read']);
+[Cot::$usr['auth_read'], Cot::$usr['auth_write'], Cot::$usr['isadmin']] = cot_auth('projects', 'any', 'RWA');
+cot_block(Cot::$usr['auth_read']);
 
 $type = cot_import('type', 'G', 'INT');
 $sort = cot_import('sort', 'G', 'ALP');
@@ -19,10 +18,12 @@ $c = cot_import('c', 'G', 'ALP');
 $forpro = cot_import('forpro', 'G', 'INT');
 $realized = cot_import('realized', 'G', 'INT');
 $sq = cot_import('sq', 'G', 'TXT');
-$sq = $db->prep($sq);
+$sq = Cot::$db->prep($sq);
 
-$maxrowsperpage = ($cfg['projects']['cat_' . $c]['maxrowsperpage']) ? $cfg['projects']['cat_' . $c]['maxrowsperpage'] : $cfg['projects']['cat___default']['maxrowsperpage'];
-list($pn, $d, $d_url) = cot_import_pagenav('d', $maxrowsperpage);
+$maxrowsperpage = (!empty($c) && !empty($cfg['projects']['cat_' . $c]['maxrowsperpage']))
+    ? Cot::$cfg['projects']['cat_' . $c]['maxrowsperpage']
+    : Cot::$cfg['projects']['cat___default']['maxrowsperpage'];
+[$pn, $d, $d_url] = cot_import_pagenav('d', $maxrowsperpage);
 	
 /* === Hook === */
 foreach (cot_getextplugins('projects.list.first') as $pl)
@@ -106,7 +107,11 @@ $list_url_path = array('c' => $c, 'type'=> $type, 'sort' => $sort, 'sq' => $sq);
 // Building the canonical URL
 $out['canonical_uri'] = cot_url('projects', $list_url_path);
 
-$mskin = cot_tplfile(array('projects', 'list', $structure['projects'][$c]['tpl']));
+if (!empty($c) && !empty(Cot::$structure['projects'][$c]['tpl'])) {
+    $mskin = cot_tplfile(['projects', 'list', Cot::$structure['projects'][$c]['tpl']]);
+} else {
+    $mskin = cot_tplfile(['projects', 'list']);
+}
 
 /* === Hook === */
 foreach (cot_getextplugins('projects.list.query') as $pl)
@@ -120,16 +125,19 @@ $t = new XTemplate($mskin);
 $where = ($where) ? 'WHERE ' . implode(' AND ', $where) : '';
 $order = ($order) ? 'ORDER BY ' . implode(', ', $order) : '';
 
-$totalitems = $db->query("SELECT COUNT(*) FROM $db_projects AS p $join_condition
-	LEFT JOIN $db_users AS u ON u.user_id=p.item_userid
-	" . $where . "")->fetchColumn();
+$totalitems = Cot::$db->query(
+    "SELECT COUNT(*) FROM $db_projects AS p " . ($join_condition ?? '')
+	. ' LEFT JOIN ' . Cot::$db->users . " AS u ON u.user_id=p.item_userid "
+    . $where
+)->fetchColumn();
 
-$sqllist = $db->query("SELECT p.*, u.* $join_columns 
-	FROM $db_projects AS p $join_condition
-	LEFT JOIN $db_users AS u ON u.user_id=p.item_userid
-	" . $where . "
-	" . $order . "
-	LIMIT $d, " . $maxrowsperpage);
+$sqllist = Cot::$db->query(
+    'SELECT p.*, u.* ' . ($join_columns ?? '')
+	." FROM $db_projects AS p " . ($join_condition ?? '')
+	. ' LEFT JOIN ' . Cot::$db->users . ' AS u ON u.user_id=p.item_userid '
+    . $where . ' ' . $order
+    . " LIMIT $d, " . $maxrowsperpage
+);
 
 $pagenav = cot_pagenav('projects', $list_url_path, $d, $totalitems, $maxrowsperpage);
 

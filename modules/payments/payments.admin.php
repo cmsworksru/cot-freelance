@@ -1,17 +1,16 @@
 <?php
+/* ====================
+[BEGIN_COT_EXT]
+Hooks=admin
+[END_COT_EXT]
+==================== */
 
-/**
- * [BEGIN_COT_EXT]
- * Hooks=admin
- * [END_COT_EXT]
- */
 /**
  * Payments module
  *
  * @package payments
- * @version 1.1.2
- * @author CMSWorks Team
- * @copyright Copyright (c) CMSWorks.ru
+ * @author CMSWorks Team, Kalnov Alexey
+ * @copyright (c) CMSWorks.ru, Kalnov Alexey https://lily-software.com
  * @license BSD
  */
 
@@ -163,12 +162,14 @@ elseif($p == 'transfers')
 		cot_redirect(cot_url('admin', 'm=payments&p=transfers'));
 	}
 
-	if($a == 'cancel' && isset($id)){
-
-		$transfer = $db->query("SELECT * FROM $db_payments_transfers AS t
+	if ($a === 'cancel' && isset($id)) {
+		$transfer = $db->query(
+            "SELECT * FROM $db_payments_transfers AS t
 			LEFT JOIN $db_users AS u ON u.user_id=t.trn_from
 			LEFT JOIN $db_payments AS p ON p.pay_code=t.trn_id AND p.pay_area='transfer'
-			WHERE trn_status='process' AND trn_id=".$id)->fetch();
+			WHERE trn_id = ? AND trn_status = 'process'",
+            $id
+        )->fetch();
 
 		$rtransfer['trn_done'] = $sys['now'];
 		$rtransfer['trn_status'] = 'canceled';

@@ -83,14 +83,12 @@ if ($n == 'billing')
 		}
 		/* ===== */
 
-		if (!cot_error_found())
-		{
+		if (!cot_error_found()) {
 			$options['desc'] = $L['payments_balance_billing_desc'];
 			$options['code'] = $pid;
 
 			/* === Hook === */
-			foreach (cot_getextplugins('payments.balance.billing.options') as $pl)
-			{
+			foreach (cot_getextplugins('payments.balance.billing.options') as $pl) {
 				include $pl;
 			}
 			/* ===== */
@@ -101,16 +99,15 @@ if ($n == 'billing')
 
 	cot_display_messages($t, 'MAIN.BILLINGFORM');
 
-	$rsumm = (!empty($rsumm)) ? $rsumm : $summ;
+	$rsumm = !empty($rsumm) ? $rsumm : ($summ ?? 0) ;
 
-	$t->assign(array(
+	$t->assign([
 		'BALANCE_FORM_ACTION_URL' => cot_url('payments', 'm=balance&n=billing&a=buy&pid=' . $pid),
 		'BALANCE_FORM_SUMM' => cot_inputbox('text', 'summ', $rsumm),
-	));
+	]);
 
 	/* === Hook === */
-	foreach (cot_getextplugins('payments.balance.billing.tags') as $pl)
-	{
+	foreach (cot_getextplugins('payments.balance.billing.tags') as $pl) {
 		include $pl;
 	}
 	/* ===== */
@@ -118,8 +115,7 @@ if ($n == 'billing')
 	$t->parse('MAIN.BILLINGFORM');
 }
 
-if ($n == 'payouts')
-{
+if ($n == 'payouts') {
 	cot_block($cfg['payments']['payouts_enabled']);
 
 	$payouttax_array = explode('|', $cfg['payments']['payouttax']);

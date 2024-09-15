@@ -1,29 +1,41 @@
 <?php
+/* ====================
+[BEGIN_COT_EXT]
+Hooks=global
+[END_COT_EXT]
+==================== */
 
-/**
- * [BEGIN_COT_EXT]
- * Hooks=global
- * [END_COT_EXT]
- */
 /**
  * Payments module
  *
  * @package payments
- * @version 1.1.2
- * @author CMSWorks Team
- * @copyright Copyright (c) CMSWorks.ru
+ * @author CMSWorks Team, Kalnov Alexey
+ * @copyright (c) CMSWorks.ru, Kalnov Alexey https://lily-software.com
  * @license BSD
  */
+
 defined('COT_CODE') or die('Wrong URL.');
+
+if (
+    (
+        Cot::$env['ext'] === 'admin'
+        && isset($m)
+        && $m === 'extensions'
+        && isset($a)
+        && $a === 'details'
+        //&& !empty($b)
+    )
+    || Cot::$env['ext'] === 'install'
+) {
+    return;
+}
 
 require_once cot_incfile('payments', 'module');
 
-
-$cot_billings = array();
+$cot_billings = [];
 
 /* === Hook === */
-foreach (cot_getextplugins('payments.billing.register') as $pl)
-{
+foreach (cot_getextplugins('payments.billing.register') as $pl) {
 	include $pl;
 }
 /* ===== */

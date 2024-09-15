@@ -4,10 +4,10 @@
  * Code=payments
  * Name=Payments
  * Description=Платежный модуль
- * Version=2.0.5
- * Date=2022-09-08
- * Author=CMSWorks Team
- * Copyright=Copyright (c) CMSWorks.ru
+ * Version=2.0.6
+ * Date=2024-09-10
+ * Author=CMSWorks Team, Kalnov Alexey
+ * Copyright=&copy; CMSWorks.ru, 2021-2024 Kalnov Alexey https://lily-software.com
  * Notes=
  * SQL=
  * Auth_guests=R
@@ -36,8 +36,8 @@
  * Payments module
  *
  * @package payments
- * @author CMSWorks Team
- * @copyright Copyright (c) CMSWorks.ru
+ * @author CMSWorks Team, Kalnov Alexey
+ * @copyright (c) CMSWorks.ru, Kalnov Alexey https://lily-software.com
  * @license BSD
  */
 
