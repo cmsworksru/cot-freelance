@@ -1,5 +1,5 @@
 <!-- BEGIN: MAIN -->
-
+{FILE "{PHP.cfg.themes_dir}/{PHP.usr.theme}/warnings.tpl"}
 
 <!-- BEGIN: BILLINGS -->
 	<h4>{PHP.L.payments_billing_title}:</h4>
@@ -19,6 +19,5 @@
 	<h4>{PHP.L.payments_billing_title}:</h4>
 	<div class="alert alert-danger">{PHP.L.payments_emptybillings}</div>
 <!-- END: EMPTYBILLINGS -->
-
 
 <!-- END: MAIN -->

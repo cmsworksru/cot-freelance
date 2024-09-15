@@ -110,29 +110,29 @@ if ($pinfo = cot_payments_payinfo($pid))
 				
 				$t->parse('MAIN.BILLINGS.BILL_ROW');
 			}
+
 			$t->parse('MAIN.BILLINGS');
 		}
-	}
-	else
-	{
+	} else {
 		/* === Hook === */
-		foreach (cot_getextplugins('payments.billing.empty') as $pl)
-		{
+		foreach (cot_getextplugins('payments.billing.empty') as $pl) {
 			include $pl;
 		}
 		/* ===== */
 
 		$t->parse('MAIN.EMPTYBILLINGS');
 	}
-}
-else
-{
+} else {
 	cot_redirect(cot_url('payments', 'm=error&msg=2', '', true));
 }
 
+// Error and message handling
+cot_display_messages($t);
+
+//die('dddd');
+
 /* === Hook === */
-foreach (cot_getextplugins('payments.billing.tags') as $pl)
-{
+foreach (cot_getextplugins('payments.billing.tags') as $pl) {
 	include $pl;
 }
 /* ===== */
