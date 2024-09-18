@@ -63,7 +63,7 @@
 							<!-- END: GUEST -->
 							
 							<!-- BEGIN: USER -->
-							<li><a href="{PHP.usr.name|cot_url('users', 'm=details&u='$this)}">{PHP.usr.name}</a></li>
+							<li><a href="{PHP.usr.name|cot_url('users', 'm=details&u=$this')}">{PHP.usr.name}</a></li>
 							<li><a href="{PHP|cot_url('users', 'm=profile')}">{PHP.L.Profile}</a></li>
 							<!-- IF {PHP.cot_modules.payments} AND {PHP.cfg.payments.balance_enabled} -->
 							<li><a href="{HEADER_USER_BALANCE_URL}">{PHP.L.payments_mybalance}: {HEADER_USER_BALANCE|number_format($this, '2', '.', ' ')} {PHP.cfg.payments.valuta}</a></li>
@@ -73,7 +73,7 @@
 								<a class="dropdown-toggle" data-toggle="dropdown" href="#">{PHP.L.projects_projects}<b class="caret"></b></a>
 								<ul class="dropdown-menu">
 									<!-- IF {PHP|cot_auth('projects', 'any', 'W')} -->
-									<li><a href="{PHP.usr.id|cot_url('users', 'm=details&id='$this'&tab=projects')}">{PHP.L.projects_myprojects}</a></li>
+									<li><a href="{PHP.usr.id|cot_url('users', 'm=details&id=$this&tab=projects')}">{PHP.L.projects_myprojects}</a></li>
 									<!-- ENDIF -->
 									<!-- IF {PHP.cot_plugins_active.sbr} -->
 									<li><a href="{PHP|cot_url('sbr')}">{PHP.L.sbr_mydeals}</a></li>
@@ -88,7 +88,7 @@
 							<li class="dropdown">
 								<a class="dropdown-toggle" data-toggle="dropdown" href="#">{PHP.L.market}<b class="caret"></b></a>
 								<ul class="dropdown-menu">
-									<li><a href="{PHP.usr.id|cot_url('users', 'm=details&id='$this'&tab=market')}">{PHP.L.market_myproducts}</a></li>
+									<li><a href="{PHP.usr.id|cot_url('users', 'm=details&id=$this&tab=market')}">{PHP.L.market_myproducts}</a></li>
 									<!-- IF {PHP.cot_plugins_active.marketorders} -->
 									<li><a href="{PHP|cot_url('marketorders', 'm=sales')}">{PHP.L.marketorders_mysales}</a></li>
 									<li><a href="{PHP|cot_url('marketorders', 'm=purchases')}">{PHP.L.marketorders_mypurchases}</a></li>

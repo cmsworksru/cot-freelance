@@ -136,6 +136,7 @@ $L['payments_balance_transfers_button'] = 'Add transfer';
 $L['payments_balance_transfers_from'] = ' From';
 $L['payments_balance_transfers_for'] = 'To';
 $L['payments_balance_transfer_desc'] = "Transfer from %1\$s to %2\$s (%3\$s)";
+$L['payments_balance_transfer_cancel_desc'] = "Отмена заявки на перевод №%1\$s";
 $L['payments_balance_transfer_comment'] = "Comment";
 $L['payments_balance_transfer_summ'] = "Amount";
 $L['payments_balance_transfer_tax'] = "Commission";
@@ -150,6 +151,10 @@ $L['payments_balance_transfer_error_comment'] = 'Comment is empty';
 $L['payments_balance_transfer_error_min'] = 'Amount shall not be less than %1$s %2$s';
 $L['payments_balance_transfer_error_max'] = 'Amount should not be more %1$s %2$s';
 
+$L['payments_balance_transfer_status_process'] = 'Processing';
+$L['payments_balance_transfer_status_done'] = 'Processed';
+$L['payments_balance_transfer_status_canceled'] = 'Cancelled';
+
 $L['payments_billing_title'] = 'Billings';
 $L['payments_emptybillings'] = 'At the moment, payment methods available. Please try to pay later.';
 
@@ -163,9 +168,11 @@ $L['payments_code'] = 'Code';
 $L['payments_desc'] = 'Desc';
 $L['payments_summ'] = 'Summ';
 
+$L['payments_payment_success'] = 'Payment is successful';
+$L['payments_payment_fail'] = 'An error occurred during the payment! Please try again. If the problem persists, contact your site administrator';
+
 $L['payments_error_message_'] = 'An error occurred in a query! Please contact the site administrator and report any action brought you to this error message.';
 $L['payments_error_message_1'] = 'This page does not exist! Please contact the site administrator and report any action brought you to this error message.';
 $L['payments_error_message_2'] = 'Illegal Operation! Please contact the site administrator and report any action brought you to this error message.';
 $L['payments_error_message_3'] = 'Payment amount does not meet the cost of the service! Please contact the site administrator and report any action brought you to this error message.';
 
-?>

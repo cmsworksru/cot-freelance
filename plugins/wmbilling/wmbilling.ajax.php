@@ -14,6 +14,10 @@
  * @copyright Copyright (c) CMSWorks.ru
  * @license BSD
  */
+
+use cot\modules\payments\inc\PaymentDictionary;
+use cot\modules\payments\inc\PaymentService;
+
 defined('COT_CODE') or die('Wrong URL');
 
 require_once cot_incfile('payments', 'module');
@@ -90,7 +94,7 @@ else
 			$amount = number_format($pinfo['pay_summ']*$cfg['plugin']['wmbilling']['webmoney_rate'], 2, '.', '');
 			if ($_POST['LMI_PAYMENT_NO'] == $pinfo['pay_id'] && $_POST['LMI_PAYEE_PURSE'] == $cfg['plugin']['wmbilling']['webmoney_purse'] && $_POST['LMI_PAYMENT_AMOUNT'] == $amount && $_POST['LMI_MODE'] == $cfg['plugin']['wmbilling']['webmoney_mode'] && $hash_check)
 			{
-				if (cot_payments_updatestatus($pinfo['pay_id'], 'paid'))
+				if (PaymentService::setStatus($pinfo['pay_id'], PaymentDictionary::STATUS_PAID, 'webmoney'))
 				{
 					echo "YES";
 				}

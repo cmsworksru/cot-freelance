@@ -53,6 +53,17 @@ if ($changeCollation) {
     CONVERT TO CHARACTER SET '" . Cot::$cfg['mysqlcharset'] . "' COLLATE '" . Cot::$cfg['mysqlcollate'] . "', 
     DEFAULT CHARACTER SET='" . Cot::$cfg['mysqlcharset'] . "' COLLATE='" . Cot::$cfg['mysqlcollate'] . "'");
 }
+
+if (!Cot::$db->fieldExists($db_payments, 'pay_system')) {
+    Cot::$db->query(
+        "ALTER TABLE $db_payments "
+        . " ADD `pay_system` varchar(100) NOT NULL DEFAULT '' AFTER `pay_status`, "
+        . " ADD `pay_method` varchar(255) NOT NULL DEFAULT '' AFTER `pay_system`, "
+        . " ADD `pay_payment_id` varchar(255) NOT NULL DEFAULT '' AFTER `pay_method`, "
+        . " ADD `pay_transaction_id` varchar(255) NOT NULL DEFAULT '' AFTER `pay_payment_id` "
+    );
+}
+
 if (!Cot::$db->indexExists($db_payments, 'payments_userid_idx', 'pay_userid')) {
     Cot::$db->addIndex($db_payments, 'payments_userid_idx', 'pay_userid');
 }

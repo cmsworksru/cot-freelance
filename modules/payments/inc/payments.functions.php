@@ -9,6 +9,11 @@
  * @copyright Copyright (c) CMSWorks.ru
  * @license BSD
  */
+
+use cot\modules\payments\inc\PaymentDictionary;
+use cot\modules\payments\inc\PaymentRepository;
+use cot\modules\payments\inc\PaymentService;
+
 defined('COT_CODE') or die('Wrong URL');
 
 // Requirements
@@ -98,13 +103,11 @@ function cot_payments_create_order($area = 'balance', $summ = 0, $options = arra
 	$payinfo['pay_userid'] = $usr['id'];
 	$payinfo['pay_area'] = $area;
 	$payinfo['pay_summ'] = $summ;
-	$payinfo['pay_cdate'] = $sys['now'];
-	$payinfo['pay_status'] = 'new';
+	$payinfo['pay_cdate'] = Cot::$sys['now'];
+	$payinfo['pay_status'] = PaymentDictionary::STATUS_NEW;
 
-	if (count($options) > 0)
-	{
-		foreach ($options as $i => $opt)
-		{
+	if (count($options) > 0) {
+		foreach ($options as $i => $opt) {
 			$payinfo['pay_' . $i] = $opt;
 		}
 	}
@@ -119,13 +122,12 @@ function cot_payments_create_order($area = 'balance', $summ = 0, $options = arra
 
 /**
  * Получение информации о платежке
+ * @deprecated
+ * @see PaymentRepository::getById
  */
-function cot_payments_payinfo($pid)
+function cot_payments_payinfo($pid): ?array
 {
-	global $db_payments, $db;
-
-	$sql = $db->query("SELECT * FROM $db_payments WHERE pay_id=" . $pid);
-	return ($pinfo = $sql->fetch()) ? $pinfo : false;
+    return PaymentRepository::getById($pid);
 }
 
 /**
@@ -152,22 +154,12 @@ function cot_payments_getallpays($area, $status = 'all')
  * process - в процессе оплаты
  * paid - оплачена
  * done - исполнено (услуга активирована)
+ * @deprecated
+ * @see PaymentService::setStatus()
  */
 function cot_payments_updatestatus($pid, $status)
 {
-	global $db_payments, $db, $sys;
-
-	$pdata['pay_status'] = $status;
-	if ($status == 'paid') // Оплачено
-	{
-		$pdata['pay_pdate'] = $sys['now'];
-	}
-	if ($status == 'done') // Исполнено
-	{
-		$pdata['pay_adate'] = $sys['now'];
-	}
-	$sql = $db->update($db_payments, $pdata, "pay_id=?", array($pid));
-	return ($sql) ? true : false;
+	return PaymentService::setStatus($pid, $status);
 }
 
 

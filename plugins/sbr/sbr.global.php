@@ -5,26 +5,30 @@
  * Hooks=global
  * [END_COT_EXT]
  */
+
+use cot\modules\payments\inc\PaymentDictionary;
+use cot\modules\payments\inc\PaymentService;
+
 defined('COT_CODE') or die('Wrong URL.');
 
 require_once cot_incfile('sbr', 'plug');
 require_once cot_incfile('payments', 'module');
 require_once cot_incfile('projects', 'module');
 
-// Проверяем платежки на оплату сделок. Если есть то активируем сделки.
-if ($sbrpays = cot_payments_getallpays('sbr', 'paid'))
-{
-	foreach ($sbrpays as $pay)
-	{
-		if (cot_payments_updatestatus($pay['pay_id'], 'done'))
-		{
-			if($sbr = $db->query("SELECT * FROM $db_sbr WHERE sbr_id=" . $pay['pay_code'])->fetch()){
-
+/**
+ * Проверяем платежки на оплату сделок. Если есть то активируем сделки.
+ * @todo правильнее обновлять статус используя хук 'payments.payment.success'
+ * @see PaymentService::processSuccessPayment()
+ */
+if ($sbrpays = cot_payments_getallpays('sbr', 'paid')) {
+	foreach ($sbrpays as $pay) {
+		if (PaymentService::setStatus($pay['pay_id'], PaymentDictionary::STATUS_DONE)) {
+			if ($sbr = $db->query("SELECT * FROM $db_sbr WHERE sbr_id=" . $pay['pay_code'])->fetch()) {
 				// Запуск сделки на исполнение
-				if($db->update($db_sbr, array('sbr_status' => 'process', 'sbr_begin' => $sys['now']), "sbr_id=" . $pay['pay_code'])){
+				if ($db->update($db_sbr, array('sbr_status' => 'process', 'sbr_begin' => $sys['now']), "sbr_id=" . $pay['pay_code'])){
 
 					// Выбираем исполнителем, если сделка привязана к проекту
-					if($sbr['sbr_pid'] > 0){
+					if ($sbr['sbr_pid'] > 0){
 						
 						// находим предыдущего выбранного исполнителя, если есть
 						$lastperformer = $db->query("SELECT u.* FROM $db_projects_offers AS o
@@ -63,5 +67,3 @@ if ($sbrpays = cot_payments_getallpays('sbr', 'paid'))
 		}
 	}
 }
-
-?>

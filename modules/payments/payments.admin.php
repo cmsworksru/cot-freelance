@@ -16,7 +16,7 @@ Hooks=admin
 
 (defined('COT_CODE') && defined('COT_ADMIN')) or die('Wrong URL.');
 
-list($usr['auth_read'], $usr['auth_write'], $usr['isadmin']) = cot_auth('payments', 'any');
+[$usr['auth_read'], $usr['auth_write'], $usr['isadmin']] = cot_auth('payments', 'any');
 cot_block($usr['isadmin']);
 
 $p = cot_import('p', 'G', 'ALP');
@@ -30,7 +30,7 @@ require_once cot_incfile('payments', 'module');
 $adminPath[] = array(cot_url('admin', 'm=extensions'), $L['Extensions']);
 $adminPath[] = array(cot_url('admin', 'm=extensions&a=details&mod='.$m), $cot_modules[$m]['title']);
 $adminPath[] = array(cot_url('admin', 'm='.$m), $L['Administration']);
-$adminHelp = $L['adm_help_payments'];
+//$adminHelp = $L['adm_help_payments'];
 
 if($p == 'payouts')
 {
@@ -121,15 +121,15 @@ elseif($p == 'transfers')
 		$rtransfer['trn_done'] = $sys['now'];
 		$rtransfer['trn_status'] = 'done';
 
-		$taxsumm = $transfer['trn_summ']*$cfg['payments']['transfertax']/100;
+        $taxsumm = 0;
+        if (!empty(Cot::$cfg['payments']['transfertax'])) {
+            $taxsumm = $transfer['trn_summ'] * ((float) Cot::$cfg['payments']['transfertax']) / 100;
+        }
 
-		if($cfg['payments']['transfertaxfromrecipient'])
-		{
+        if (Cot::$cfg['payments']['transfertaxfromrecipient']) {
 			$sendersumm = $transfer['trn_summ'];
 			$recipientsumm = $transfer['trn_summ'] - $taxsumm;
-		}
-		else 
-		{
+		} else {
 			$sendersumm = $transfer['trn_summ'] + $taxsumm;
 			$recipientsumm = $transfer['trn_summ'];
 		}
@@ -237,10 +237,10 @@ elseif($p == 'transfers')
 else
 {
 
-	list($pn, $d, $d_url) = cot_import_pagenav('d', $cfg['maxrowsperpage']);
+	[$pn, $d, $d_url] = cot_import_pagenav('d', $cfg['maxrowsperpage']);
 	$id = cot_import('id', 'G', 'INT');
 
-	list($pg, $d, $durl) = cot_import_pagenav('d', $cfg['maxrowsperpage']);
+	[$pg, $d, $durl] = cot_import_pagenav('d', $cfg['maxrowsperpage']);
 
 	$where['status'] = "pay_status='done'";
 	$where['summ'] = 'pay_summ>0';
@@ -295,9 +295,8 @@ else
 		
 		$t->parse('MAIN.PAYMENTS.PAY_ROW');	
 	}
-
-	if(!empty($id))
-	{
+    $where_string = '';
+	if (!empty($id)) {
 		$where_string = 'AND pay_userid='.$id;
 	}
 	$inbalance = $db->query("SELECT SUM(pay_summ) as summ FROM $db_payments AS p

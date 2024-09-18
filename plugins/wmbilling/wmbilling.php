@@ -14,6 +14,11 @@
  * @copyright Copyright (c) CMSWorks.ru
  * @license BSD
  */
+
+use cot\modules\payments\inc\PaymentDictionary;
+use cot\modules\payments\inc\PaymentRepository;
+use cot\modules\payments\inc\PaymentService;
+
 defined('COT_CODE') && defined('COT_PLUG') or die('Wrong URL');
 
 require_once cot_incfile('wmbilling', 'plug');
@@ -25,7 +30,7 @@ $pid = cot_import('pid', 'G', 'INT');
 if (empty($m))
 {
 	// Получаем информацию о заказе
-	if (!empty($pid) && $pinfo = cot_payments_payinfo($pid))
+	if (!empty($pid) && $pinfo = PaymentRepository::getById($pid))
 	{
 		cot_block($usr['id'] == $pinfo['pay_userid']);
 		cot_block($pinfo['pay_status'] == 'new' || $pinfo['pay_status'] == 'process');
@@ -56,7 +61,8 @@ if (empty($m))
 		));
 		$t->parse("MAIN.WMFORM");
 
-		cot_payments_updatestatus($pid, 'process'); // Изменяем статус "в процессе оплаты"
+        // Изменяем статус "в процессе оплаты"
+        PaymentService::setStatus($pid, PaymentDictionary::STATUS_PROCESS, 'webmoney');
 	}
 	else
 	{
@@ -69,7 +75,7 @@ elseif ($m == 'success')
 
 	if (isset($_GET['LMI_PAYMENT_NO']) && preg_match('/^\d+$/', $_GET['LMI_PAYMENT_NO']) == 1)
 	{
-		$pinfo = cot_payments_payinfo($_GET['LMI_PAYMENT_NO']);
+		$pinfo = PaymentRepository::getById((int) $_GET['LMI_PAYMENT_NO']);
 		if ($pinfo['pay_status'] == 'done')
 		{
 			$pluginBody = $L['wmbilling_error_done'];

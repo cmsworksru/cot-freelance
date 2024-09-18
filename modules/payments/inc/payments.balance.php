@@ -1,17 +1,18 @@
 <?php
-
 /**
  * Payments module
  *
  * @package payments
- * @version 1.1.2
- * @author CMSWorks Team
- * @copyright Copyright (c) CMSWorks.ru
+ * @author CMSWorks Team, Alexey Kalnov
+ * @copyright (c) CMSWorks.ru, Alexey Kalnov https://lily-software.com
  * @license BSD
+ *
+ * @todo use BC Math for money calculations
+ * @see https://www.php.net/manual/en/intro.bc.php
  */
 defined('COT_CODE') or die('Wrong URL.');
 
-list($usr['auth_read'], $usr['auth_write'], $usr['isadmin']) = cot_auth('payments', 'any', 'RWA');
+[$usr['auth_read'], $usr['auth_write'], $usr['isadmin']] = cot_auth('payments', 'any', 'RWA');
 cot_block($usr['auth_write']);
 
 require_once cot_incfile('forms');
@@ -20,14 +21,12 @@ $n = cot_import('n', 'G', 'ALP');
 $pid = cot_import('pid', 'G', 'INT');
 $rsumm = cot_import('rsumm', 'G', 'NUM');
 
-if (empty($n))
-{
+if (empty($n)) {
 	$n = 'history';
 }
 
 /* === Hook === */
-foreach (cot_getextplugins('payments.balance.first') as $pl)
-{
+foreach (cot_getextplugins('payments.balance.first') as $pl) {
 	include $pl;
 }
 /* ===== */
@@ -35,8 +34,7 @@ foreach (cot_getextplugins('payments.balance.first') as $pl)
 $t = new XTemplate(cot_tplfile('payments.balance', 'module'));
 
 /* === Hook === */
-foreach (cot_getextplugins('payments.balance.main') as $pl)
-{
+foreach (cot_getextplugins('payments.balance.main') as $pl) {
 	include $pl;
 }
 /* ===== */
@@ -291,29 +289,26 @@ if ($n == 'transfers')
 	}
 	/* ===== */
 
-	if ($a == 'send')
-	{
-
+	if ($a == 'send') {
 		$summ = cot_import('summ', 'P', 'NUM');
 		$username = cot_import('username', 'P', 'TXT', 100, TRUE);
 		$comment = cot_import('comment', 'P', 'TXT');
-		
-		$taxsumm = $summ*$cfg['payments']['transfertax']/100;
+
+        $taxsumm = 0;
+        if (!empty(Cot::$cfg['payments']['transfertax'])) {
+            $taxsumm = $summ * ((float) Cot::$cfg['payments']['transfertax']) / 100;
+        }
 		
 		/* === Hook === */
-		foreach (cot_getextplugins('payments.balance.transfers.import') as $pl)
-		{
+		foreach (cot_getextplugins('payments.balance.transfers.import') as $pl) {
 			include $pl;
 		}
 		/* ===== */
 
-		if($cfg['payments']['transfertaxfromrecipient'])
-		{
+		if (Cot::$cfg['payments']['transfertaxfromrecipient']) {
 			$sendersumm = $summ;
 			$recipientsumm = $sendersumm - $summ;
-		}
-		else 
-		{
+		} else {
 			$sendersumm = $summ + $taxsumm;
 			$recipientsumm = $summ;
 		}
@@ -416,8 +411,7 @@ if ($n == 'transfers')
 				$t->assign(cot_generate_usertags($transfer['trn_to'], 'TRANSFER_ROW_FOR_'));
 
 				/* === Hook - Part2 : Include === */
-				foreach ($extp as $pl)
-				{
+				foreach ($extp as $pl) {
 					include $pl;
 				}
 				/* ===== */
@@ -426,21 +420,18 @@ if ($n == 'transfers')
 			}
 		}
 		$t->parse('MAIN.TRANSFERS');
-	}
-	else
-	{
-		$t->assign(array(
+	} else {
+		$t->assign([
 			'TRANSFER_FORM_ACTION_URL' => cot_url('payments', 'm=balance&n=transfers&a=send'),
-			'TRANSFER_FORM_SUMM' => cot_inputbox('text', 'summ', $summ),
-			'TRANSFER_FORM_TAX' => (!empty($taxsumm)) ? $taxsumm : 0,
-			'TRANSFER_FORM_TOTAL' => (!empty($sendersumm)) ? $sendersumm : 0,
-			'TRANSFER_FORM_COMMENT' => cot_textarea('comment', $comment, 5, 40, '', ''),
-			'TRANSFER_FORM_USERNAME' => cot_inputbox('text', 'username', $username),
-		));
+			'TRANSFER_FORM_SUMM' => cot_inputbox('text', 'summ', $summ ?? ''),
+			'TRANSFER_FORM_TAX' => !empty($taxsumm) ? $taxsumm : 0,
+			'TRANSFER_FORM_TOTAL' => !empty($sendersumm) ? $sendersumm : 0,
+			'TRANSFER_FORM_COMMENT' => cot_textarea('comment', $comment ?? '', 5, 40, '', ''),
+			'TRANSFER_FORM_USERNAME' => cot_inputbox('text', 'username', $username ?? ''),
+		]);
 		
 		/* === Hook === */
-		foreach (cot_getextplugins('payments.balance.transfers.form') as $pl)
-		{
+		foreach (cot_getextplugins('payments.balance.transfers.form') as $pl) {
 			include $pl;
 		}
 		/* ===== */
@@ -451,9 +442,8 @@ if ($n == 'transfers')
 	}
 }
 
-if ($n == 'history')
-{
-	list($pg, $d, $durl) = cot_import_pagenav('d', $cfg['maxrowsperpage']);
+if ($n == 'history') {
+	[$pg, $d, $durl] = cot_import_pagenav('d', $cfg['maxrowsperpage']);
 
 	$totallines = $db->query("SELECT COUNT(*) FROM $db_payments 
 		WHERE pay_userid=" . $usr['id'] . " AND pay_status='done' AND pay_summ>0")->fetchColumn();
@@ -491,13 +481,14 @@ if ($n == 'history')
 	$t->parse('MAIN.HISTORY');
 }
 
+// Error and message handling
+cot_display_messages($t);
+
 /* === Hook === */
-foreach (cot_getextplugins('payments.balance.tags') as $pl)
-{
+foreach (cot_getextplugins('payments.balance.tags') as $pl) {
 	include $pl;
 }
 /* ===== */
 
 $t->parse('MAIN');
 $module_body = $t->text('MAIN');
-?>

@@ -1,24 +1,15 @@
 <?php
 /**
- * nullbilling plugin
+ * Null billing Plugin
  *
  * @package nullbilling
- * @version 1.0.0
- * @author CMSWorks Team
- * @copyright Copyright (c) CMSWorks.ru
+ * @author CMSWorks Team, Alexey Kalnov
+ * @copyright (c) CMSWorks.ru, 2024 Alexey Kalnov, Lily Software https://lily-software.com
  * @license BSD
  */
 
+declare(strict_types=1);
+
 defined('COT_CODE') or die('Wrong URL.');
 
-
-$L['nullbilling_title'] = 'Test payment system';
-
-$L['nullbilling_error_paid'] = 'Payment was successful. In the near future the service will be activated!';
-$L['nullbilling_error_done'] = 'Payment was successful.';
-$L['nullbilling_error_incorrect'] = 'The signature is incorrect!';
-$L['nullbilling_error_otkaz'] = 'Failure to pay.';
-$L['nullbilling_error_title'] = 'Result of the operation of payment';
-$L['nullbilling_error_fail'] = 'Payment is not made! Please try again. If the problem persists, contact your site administrator';
-
-$L['nullbilling_redirect_text'] = 'Now will redirect to the page of the paid services. If it does not, click <a href="%1$s">here</a>.';
+$L['nullbilling_title'] = 'Test (fake) payment system';

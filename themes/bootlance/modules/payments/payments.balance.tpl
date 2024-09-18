@@ -1,5 +1,5 @@
 <!-- BEGIN: MAIN -->
-
+{FILE "{PHP.cfg.themes_dir}/{PHP.usr.theme}/warnings.tpl"}
 <div class="breadcrumb">{PHP.L.payments_mybalance}</div>
 		
 <!-- IF {PHP.cfg.payments.balance_enabled} -->
