@@ -233,25 +233,20 @@ elseif($p == 'transfers')
 		}
 	}
 	$t->parse('MAIN.TRANSFERS');
-}
-else
-{
-
-	[$pn, $d, $d_url] = cot_import_pagenav('d', $cfg['maxrowsperpage']);
+} else {
+	[$pn, $d, $d_url] = cot_import_pagenav('d', Cot::$cfg['maxrowsperpage']);
 	$id = cot_import('id', 'G', 'INT');
 
-	[$pg, $d, $durl] = cot_import_pagenav('d', $cfg['maxrowsperpage']);
+	[$pg, $d, $durl] = cot_import_pagenav('d', Cot::$cfg['maxrowsperpage']);
 
 	$where['status'] = "pay_status='done'";
 	$where['summ'] = 'pay_summ>0';
 
-	if (!empty($sq))
-	{
+	if (!empty($sq)) {
 		$where['search'] = "(u.user_name LIKE '%".$db->prep($sq)."%' OR u.user_email LIKE '%".$db->prep($sq)."%')";
 	}
 
-	if(isset($id))
-	{
+	if (isset($id)) {
 		$where['userid'] = 'pay_userid=' . $id;
 		$urr = $db->query("SELECT * FROM $db_users WHERE user_id=" . (int)$id)->fetch();
 		$t->assign(cot_generate_usertags($urr, 'USER_'));
@@ -271,26 +266,27 @@ else
 
 	$pagenav = cot_pagenav('admin', 'm=payments&id='.$id.'&sq='.$sq, $d, $totalitems, $cfg['maxrowsperpage']);
 
-	$t->assign(array(
-		'PAGENAV_PAGES' => $pagenav['main'],
-		'PAGENAV_PREV' => $pagenav['prev'],
-		'PAGENAV_NEXT' => $pagenav['next']
-	));
+    $t->assign(cot_generatePaginationTags($pagenav));
 
-	foreach($pays as $pay)
-	{
+    if (isset(Cot::$cfg['legacyMode']) && Cot::$cfg['legacyMode']) {
+        // @deprecated in 2.0.6
+        $t->assign([
+            'PAGENAV_PAGES' => $pagenav['main'],
+            'PAGENAV_PREV' => $pagenav['prev'],
+            'PAGENAV_NEXT' => $pagenav['next'],
+        ]);
+    }
+
+    foreach($pays as $pay) {
 		$t->assign(cot_generate_paytags($pay, 'PAY_ROW_'));
 		
-		if($pay['pay_userid'] > 0)
-		{
+		if ($pay['pay_userid'] > 0) {
 			$t->assign(cot_generate_usertags($pay, 'PAY_ROW_USER_'));
-		}
-		else
-		{
-			$t->assign(array(
+		} else {
+			$t->assign([
 				'PAY_ROW_USER_ID' => 0,
-				'PAY_ROW_USER_NICKNAME' => $L['Guest'],
-			));
+				'PAY_ROW_USER_NICKNAME' => Cot::$L['Guest'],
+			]);
 		}
 		
 		$t->parse('MAIN.PAYMENTS.PAY_ROW');	
@@ -299,24 +295,24 @@ else
 	if (!empty($id)) {
 		$where_string = 'AND pay_userid='.$id;
 	}
-	$inbalance = $db->query("SELECT SUM(pay_summ) as summ FROM $db_payments AS p
+	$inbalance = Cot::$db->query("SELECT SUM(pay_summ) as summ FROM $db_payments AS p
 		WHERE pay_area='balance' AND pay_summ>0 $where_string AND pay_status='done'")->fetchColumn();
 
-	$outbalance = $db->query("SELECT SUM(pay_summ) as summ FROM $db_payments AS p
+	$outbalance = Cot::$db->query("SELECT SUM(pay_summ) as summ FROM $db_payments AS p
 		WHERE pay_area='balance' AND pay_summ<0 $where_string AND pay_status='done'")->fetchColumn();
 
-	$credit = $db->query("SELECT SUM(pay_summ) as summ FROM $db_payments AS p
+	$credit = Cot::$db->query("SELECT SUM(pay_summ) as summ FROM $db_payments AS p
 		WHERE pay_area!='balance' $where_string AND pay_status='done'")->fetchColumn();
 
-	$t->assign(array(
+	$t->assign([
 		'INBALANCE' => number_format($inbalance, 2, '.', ' '),
 		'OUTBALANCE' => number_format(abs($outbalance), 2, '.', ' '),
 		'BALANCE' => number_format($inbalance - abs($outbalance), 2, '.', ' '),
 		'CREDIT' => number_format($credit, 2, '.', ' '),
-	));
+	]);
 
 	$t->parse('MAIN.PAYMENTS');
 }
 
 $t->parse('MAIN');
-$adminmain = $t->text('MAIN');
+$adminMain = $t->text('MAIN');

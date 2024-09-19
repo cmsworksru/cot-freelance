@@ -196,27 +196,24 @@ function cot_generate_paytags($item_data, $tag_prefix = '')
 	global $db, $cfg, $L, $Ls, $R, $db_payments, $usr, $sys;
 	static $extp_first = null, $extp_main = null;
 
-	if (is_null($extp_first))
-	{
+	if (is_null($extp_first)) {
 		$extp_first = cot_getextplugins('paytags.first');
 		$extp_main = cot_getextplugins('paytags.main');
 	}
 
 	/* === Hook === */
-	foreach ($extp_first as $pl)
-	{
+	foreach ($extp_first as $pl) {
 		include $pl;
 	}
 	/* ===== */
-	if (!is_array($item_data))
-	{
+
+	if (!is_array($item_data)) {
 		$sql = $db->query("SELECT * FROM $db_payments WHERE pay_id = '" . (int)$item_data . "' LIMIT 1");
 		$item_data = $sql->fetch();
 	}
 
-	if ($item_data['pay_id'] > 0 && !empty($item_data['pay_area']))
-	{
-		$temp_array = array(
+	if ($item_data['pay_id'] > 0 && !empty($item_data['pay_area'])) {
+		$temp_array = [
 			'ID' => $item_data['pay_id'],
 			'USERID' => $item_data['pay_userid'],
 			'CDATE' => $item_data['pay_cdate'],
@@ -228,7 +225,11 @@ function cot_generate_paytags($item_data, $tag_prefix = '')
 			'SUMM' => $item_data['pay_summ'],
 			'TIME' => $item_data['pay_time'],
 			'STATUS' => $item_data['pay_status'],
-		);
+            'SYSTEM' => $item_data['pay_system'],
+            'METHOD' => $item_data['pay_method'],
+            'PS_PAYMENT_ID' => $item_data['pay_payment_id'],
+            'PS_TRANSACTION' => $item_data['pay_transaction_id'],
+		];
 
 		/* === Hook === */
 		foreach ($extp_main as $pl)

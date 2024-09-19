@@ -168,6 +168,13 @@ $L['payments_code'] = 'Code';
 $L['payments_desc'] = 'Desc';
 $L['payments_summ'] = 'Summ';
 
+$L['payments_payment_system'] = 'Payment system';
+$L['payments_payment_method'] = 'Payment method';
+$L['payments_payment_id'] = 'Payment ID';
+$L['payments_payment_id_hint'] = 'in our system';
+$L['payments_transaction'] = 'Transaction';
+$L['payments_transaction_hint'] = 'in payment system';
+
 $L['payments_payment_success'] = 'Payment is successful';
 $L['payments_payment_fail'] = 'An error occurred during the payment! Please try again. If the problem persists, contact your site administrator';
 

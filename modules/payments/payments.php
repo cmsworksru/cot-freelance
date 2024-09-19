@@ -58,21 +58,20 @@ if (!$paymentsUseOldRouter) {
         cot_die_message(404);
         exit;
     }
-    $autoAssignTags = false;
+
     if (COT_AJAX) {
         echo $outContent;
-        unset($t);
-    } else {
-        if (!isset(Cot::$out['head'])) {
-            Cot::$out['head'] = '';
-        }
-        Cot::$out['head'] .= Cot::$R['code_noindex'];
-
-        require_once Cot::$cfg['system_dir'] . '/header.php';
-        echo $outContent;
-        require_once Cot::$cfg['system_dir'] . '/footer.php';
+        return;
     }
-    unset($outContent);
+
+    if (!isset(Cot::$out['head'])) {
+        Cot::$out['head'] = '';
+    }
+    Cot::$out['head'] .= Cot::$R['code_noindex'];
+
+    require_once Cot::$cfg['system_dir'] . '/header.php';
+    echo $outContent;
+    require_once Cot::$cfg['system_dir'] . '/footer.php';
 
     return;
 }

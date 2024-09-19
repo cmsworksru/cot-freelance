@@ -66,4 +66,4 @@ if(is_array($otherusers))
 }
 
 $t->parse('MAIN');
-$adminmain = $t->text('MAIN');
+$adminMain = $t->text('MAIN');

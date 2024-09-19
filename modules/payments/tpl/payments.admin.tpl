@@ -17,7 +17,6 @@
 </div>
 
 <!-- BEGIN: PAYMENTS -->
-
 <div class="block button-toolbar well">
 	<!-- IF {PHP.cfg.payments.balance_enabled} -->
 	<p><b>{PHP.L.payments_siteinvoices}:</b> {PHP.L.payments_debet}: {INBALANCE} {PHP.cfg.payments.valuta} | {PHP.L.payments_credit}: {OUTBALANCE} {PHP.cfg.payments.valuta} | {PHP.L.payments_balance}: {BALANCE} {PHP.cfg.payments.valuta}</p>
@@ -26,7 +25,7 @@
 </div>
 
 <div class="block">
-	<table class="cells table table-bordered table-striped">
+	<table class="cells table table-bordered">
 	<thead>
 	<tr>
 		<th class="coltop">#</th>
@@ -43,7 +42,9 @@
 	<tbody>
 	<!-- BEGIN: PAY_ROW -->
 	<tr>
-		<td>{PAY_ROW_ID}</td>
+		<td <!-- IF {PAY_ROW_SYSTEM} OR {PAY_ROW_METHOD} OR {PAY_ROW_PS_PAYMENT_ID} OR {PAY_ROW_PS_TRANSACTION} -->rowspan="3"<!-- ENDIF --> style="vertical-align: middle;">
+			{PAY_ROW_ID}
+		</td>
 		<td><a href="{PAY_ROW_USER_ID|cot_url('admin', 'm=payments&id='$this)}">{PAY_ROW_USER_NICKNAME}</a></td>
 		<td>{PAY_ROW_ADATE|date('d.m.Y H:i',$this)}</td>
 		<td class="centerall"><!-- IF {PAY_ROW_AREA} == 'balance' -->+<!-- ELSE -->-<!-- ENDIF --></td>
@@ -53,13 +54,28 @@
 		<td>{PAY_ROW_CODE}</td>
 		<td>{PAY_ROW_STATUS}</td>
 	</tr>
+	<!-- IF {PAY_ROW_SYSTEM} OR {PAY_ROW_METHOD} OR {PAY_ROW_PS_PAYMENT_ID} OR {PAY_ROW_PS_TRANSACTION} -->
+	<tr>
+		<td colspan="3">
+			<!-- IF {PAY_ROW_SYSTEM} -->{PHP.L.payments_payment_system}: <b>{PAY_ROW_SYSTEM}</b><br><!-- ENDIF -->
+			<!-- IF {PAY_ROW_METHOD} -->{PHP.L.payments_payment_method}: {PAY_ROW_METHOD}<!-- ENDIF -->
+		</td>
+		<td colspan="6">
+			<!-- IF {PAY_ROW_PS_PAYMENT_ID} -->
+			{PHP.L.payments_payment_id} ({PHP.L.payments_payment_id_hint}): {PAY_ROW_PS_PAYMENT_ID}<br>
+			<!-- ENDIF -->
+			<!-- IF {PAY_ROW_PS_TRANSACTION} -->
+			{PHP.L.payments_transaction} {PHP.L.payments_transaction_hint}: {PAY_ROW_PS_TRANSACTION}
+			<!-- ENDIF -->
+		</td>
+	<tr>
+	<!-- ENDIF -->
 	<!-- END: PAY_ROW -->
 	</tbody>
 	</table>
 	
-	<div class="pagination"><ul>{PAGENAV_PREV}{PAGENAV_PAGES}{PAGENAV_NEXT}</ul></div>	
+	<div class="pagination"><ul>{PREVIOUS_PAGE}{PAGINATION}{NEXT_PAGE}</ul></div>
 </div>
-	
 <!-- END: PAYMENTS -->
 
 <!-- BEGIN: PAYOUTS -->
