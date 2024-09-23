@@ -14,10 +14,12 @@ Hooks=admin
  * @license BSD
  */
 
+use cot\modules\payments\inc\PaymentDictionary;
+
 (defined('COT_CODE') && defined('COT_ADMIN')) or die('Wrong URL.');
 
-[$usr['auth_read'], $usr['auth_write'], $usr['isadmin']] = cot_auth('payments', 'any');
-cot_block($usr['isadmin']);
+[Cot::$usr['auth_read'], Cot::$usr['auth_write'], Cot::$usr['isadmin']] = cot_auth('payments', 'any');
+cot_block(Cot::$usr['isadmin']);
 
 $p = cot_import('p', 'G', 'ALP');
 $sq = cot_import('sq', 'P', 'TXT');
@@ -239,8 +241,13 @@ elseif($p == 'transfers')
 
 	[$pg, $d, $durl] = cot_import_pagenav('d', Cot::$cfg['maxrowsperpage']);
 
-	$where['status'] = "pay_status='done'";
-	$where['summ'] = 'pay_summ>0';
+    $paymentStatusesToShow = [
+        PaymentDictionary::STATUS_PAID,
+        PaymentDictionary::STATUS_DONE,
+    ];
+
+	$where['status'] = "pay_status IN ('" . implode("', '", $paymentStatusesToShow) . "')";
+	$where['summ'] = 'pay_summ > 0';
 
 	if (!empty($sq)) {
 		$where['search'] = "(u.user_name LIKE '%".$db->prep($sq)."%' OR u.user_email LIKE '%".$db->prep($sq)."%')";
