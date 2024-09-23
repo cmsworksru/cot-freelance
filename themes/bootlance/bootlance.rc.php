@@ -19,6 +19,4 @@ Resources::addFile(Cot::$cfg['themes_dir'] . '/' . Cot::$usr['theme'] . '/css/st
 
 Resources::addFile(Cot::$cfg['themes_dir'] . '/' . Cot::$usr['theme'] . '/js/js.js');
 
-require_once cot_rc(
-    Cot::$cfg['themes_dir'] . '/' . Cot::$usr['theme'] . '/' . Cot::$usr['theme'] . '.resources.php'
-);
+require_once Cot::$cfg['themes_dir'] . '/' . Cot::$usr['theme'] . '/' . Cot::$usr['theme'] . '.resources.php'
