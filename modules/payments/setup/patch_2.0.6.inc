@@ -66,6 +66,7 @@ if (!Cot::$db->fieldExists($db_payments, 'pay_system')) {
 
 if (!Cot::$db->indexExists($db_payments, 'payments_userid_idx', 'pay_userid')) {
     Cot::$db->addIndex($db_payments, 'payments_userid_idx', 'pay_userid');
+    Cot::$db->addIndex($db_payments, 'payments_status_idx', 'pay_status');
 }
 
 Cot::$db->query("

@@ -1,7 +1,7 @@
 <?php
 /* ====================
 [BEGIN_COT_EXT]
-ode=nullbilling
+Code=nullbilling
 Name=Nullbilling
 Category=Payments
 Description=Null billing system for test mode

@@ -52,19 +52,18 @@ function cot_setuserpoints($points, $type, $userid, $itemid = 0)
 	}
 }
 
-function cot_get_topusers ($maingrp, $count, $sqlsearch='', $tpl='index')
+function cot_get_topusers ($maingrp, $count, $sqlsearch = '', $tpl = 'index')
 {
 	global $L, $cfg, $db, $db_users;
 
-	$t1 = new XTemplate(cot_tplfile(array('userpoints', $tpl), 'plug'));
+	$t1 = new XTemplate(cot_tplfile(['userpoints', $tpl], 'plug'));
 	
 	$sqlsearch = !empty($sqlsearch) ? " AND " . $sqlsearch : '';
 	
 	$topusers = $db->query("SELECT * FROM $db_users
 		WHERE user_userpoints>0 AND user_maingrp=".$maingrp." $sqlsearch ORDER BY user_userpoints DESC LIMIT " . $count)->fetchAll();
 
-	foreach ($topusers as $tur)
-	{
+	foreach ($topusers as $tur) {
 		$t1->assign(cot_generate_usertags($tur, 'TOP_ROW_'));
 		$t1->parse('MAIN.TOP_ROW');
 	}
@@ -72,6 +71,3 @@ function cot_get_topusers ($maingrp, $count, $sqlsearch='', $tpl='index')
 	$t1->parse('MAIN');
 	return $t1->text('MAIN');
 }
-
-
-?>

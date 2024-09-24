@@ -16,7 +16,8 @@ CREATE TABLE IF NOT EXISTS `cot_payments` (
     `pay_time` INT UNSIGNED DEFAULT 0,
     `pay_redirect` varchar(255) NOT NULL DEFAULT '',
     PRIMARY KEY  (`pay_id`),
-    KEY `payments_userid_idx` (`pay_userid`)
+    KEY `payments_userid_idx` (`pay_userid`),
+    KEY `payments_status_idx` (`pay_status`)
 );
 
 CREATE TABLE IF NOT EXISTS `cot_payments_services` (
