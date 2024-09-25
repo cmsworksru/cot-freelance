@@ -26,7 +26,7 @@ This is not a ready to use website build. To install it, you need the current ve
 - Open your browser and follow the link: **http://your-domain.tld/install.php** (replace **your-domain.tld** with your domain)
 - Follow the on-screen instructions until the installation is complete. During installation, select the flance installation script and bootlance theme.
 - During installation, you will be prompted to select modules and plugins. The most basic extensions that are necessary for the operation of the exchange are ticked, but you can also select the rest if necessary.
-- In the file datas/config.php set the option `$cfg['customfuncs'] = true`;
+- In the file **datas/config.php** set the option `$cfg['customfuncs'] = true`;
 - Be sure to configure the Usergroupselector plugin if your site will divide users into different groups, for example, employers and freelancers. In the settings of this plugin, you need to specify which groups will be available for users to choose when registering or in the profile. If you need to create another user group, then go to the "Users" section of the admin panel.
 - In order to be able to attach files and images to projects (as well as to suggestions in the description and in the portfolio), you must also install the Mavatars and Mavatarslance plugins, which also come as part of the bundle.
 - Initially, your site will be empty. You can create your own categories yourself in the "Structure" section of the admin panel.
