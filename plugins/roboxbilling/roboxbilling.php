@@ -15,9 +15,9 @@
  * @license BSD
  */
 
-use cot\modules\payments\inc\PaymentDictionary;
-use cot\modules\payments\inc\PaymentRepository;
-use cot\modules\payments\inc\PaymentService;
+use cot\modules\payments\dictionaries\PaymentDictionary;
+use cot\modules\payments\Repositories\PaymentRepository;
+use cot\modules\payments\Services\PaymentService;
 
 defined('COT_CODE') && defined('COT_PLUG') or die('Wrong URL');
 
@@ -30,7 +30,7 @@ $pid = cot_import('pid', 'G', 'INT');
 if (empty($m))
 {
 	// Получаем информацию о заказе
-	if (!empty($pid) && $pinfo = PaymentRepository::getById($pid))
+	if (!empty($pid) && $pinfo = PaymentRepository::getInstance()->getById($pid))
 	{
 		cot_block($usr['id'] == $pinfo['pay_userid']);
 		cot_block($pinfo['pay_status'] == 'new' || $pinfo['pay_status'] == 'process');
@@ -56,7 +56,7 @@ if (empty($m))
 		$post_opt = "MrchLogin=" . $mrh_login . "&OutSum=" . $out_summ . "&InvId=" . $inv_id . "&Desc=" . $inv_desc . "&SignatureValue=" . $crc . "&Shp_item=" . $shp_item . "&IncCurrLabel=" . $in_curr . "&Culture=" . $culture . $test_string;
 
         // Изменяем статус "в процессе оплаты"
-        PaymentService::setStatus($pid, PaymentDictionary::STATUS_PROCESS, 'robox');
+        PaymentService::getInstance()->setStatus($pid, PaymentDictionary::STATUS_PROCESS, 'robox');
 
 		header('Location: ' . $url . '?' . $post_opt);
 		exit;
@@ -95,7 +95,7 @@ elseif ($m == 'success')
 		if(!empty($inv_id))
 		{
 			// проверка наличия номера платежки и ее статуса
-			$pinfo = PaymentRepository::getById($inv_id);
+			$pinfo = PaymentRepository::getInstance()->getById($inv_id);
 			if ($pinfo['pay_status'] == 'done')
 			{
 				$pluginBody = $L['roboxbilling_error_done'];

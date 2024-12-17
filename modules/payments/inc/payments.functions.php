@@ -10,9 +10,10 @@
  * @license BSD
  */
 
-use cot\modules\payments\inc\PaymentDictionary;
-use cot\modules\payments\inc\PaymentRepository;
-use cot\modules\payments\inc\PaymentService;
+use cot\modules\payments\dictionaries\PaymentDictionary;
+use cot\modules\payments\Repositories\PaymentRepository;
+use cot\modules\payments\Services\PaymentService;
+use cot\modules\payments\Services\UserBalanceService;
 
 defined('COT_CODE') or die('Wrong URL');
 
@@ -127,7 +128,7 @@ function cot_payments_create_order($area = 'balance', $summ = 0, $options = arra
  */
 function cot_payments_payinfo($pid): ?array
 {
-    return PaymentRepository::getById($pid);
+    return PaymentRepository::getInstance()->getById($pid);
 }
 
 /**
@@ -155,39 +156,30 @@ function cot_payments_getallpays($area, $status = 'all')
  * paid - оплачена
  * done - исполнено (услуга активирована)
  * @deprecated
- * @see PaymentService::setStatus()
+ * @see \cot\modules\payments\Services\PaymentService::setStatus()
  */
 function cot_payments_updatestatus($pid, $status)
 {
-	return PaymentService::setStatus($pid, $status);
+	return PaymentService::getInstance()-setStatus($pid, $status);
 }
 
-
-function cot_payments_getuserbalance($userid){
-	global $db_payments, $db;
-	
-	$balance = $db->query("SELECT SUM(pay_summ) FROM $db_payments 
-		WHERE pay_userid=".$userid." AND pay_area='balance' AND pay_status='done'")->fetchColumn();
-	
-	return ($balance > 0) ? $balance : 0;
+/**
+ * @deprecated
+ * @see UserBalanceService::getByUserId
+ */
+function cot_payments_getuserbalance($userid): float
+{
+    return (float) UserBalanceService::getInstance()->getByUserId((int) $userid);
 }
 
-
+/**
+ * @deprecated
+ * @see UserBalanceService::updateForUser()
+ */
 function cot_payments_updateuserbalance($userid, $summ, $pid)
 {
-	global $db_payments, $db, $sys;
-
-	$pdata['pay_userid'] = $userid;
-	$pdata['pay_summ'] = $summ;
-	$pdata['pay_area'] = 'balance';
-	$pdata['pay_status'] = 'done';
-	$pdata['pay_code'] = $pid;
-	$pdata['pay_cdate'] = $sys['now'];
-	$pdata['pay_pdate'] = $sys['now'];
-	$pdata['pay_adate'] = $sys['now'];
-	
-	$sql = $db->insert($db_payments, $pdata);
-	return ($sql) ? true : false;
+	return UserBalanceService::getInstance()
+        ->updateForUser((int) $userid, (string) $summ, $pid ? (int) $pid : null);
 }
 
 

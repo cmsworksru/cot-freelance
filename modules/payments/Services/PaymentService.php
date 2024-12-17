@@ -2,9 +2,12 @@
 
 declare(strict_types=1);
 
-namespace cot\modules\payments\inc;
+namespace cot\modules\payments\Services;
 
 use Cot;
+use cot\modules\payments\dictionaries\PaymentDictionary;
+use cot\modules\payments\Repositories\PaymentRepository;
+use cot\traits\GetInstanceTrait;
 use Exception;
 
 /**
@@ -17,6 +20,8 @@ use Exception;
  */
 class PaymentService
 {
+    use GetInstanceTrait;
+
     /**
      * Set payment status
      *  'new' - new
@@ -29,15 +34,15 @@ class PaymentService
      * @param ?string $paymentSystem
      * @param ?string $paymentMethod
      * @param ?string $paymentSystemPaymentId Payment Id passed to payment system
-     * @param ?string $transaction Tranaction ID in payment system
+     * @param ?string $transaction Transaction ID in payment system
      * @return bool
      *
-     * @see PaymentDictionary::STATUS_NEW
-     * @see PaymentDictionary::STATUS_PROCESS
-     * @see PaymentDictionary::STATUS_PAID
-     * @see PaymentDictionary::STATUS_DONE
+     * @see \cot\modules\payments\dictionaries\PaymentDictionary::STATUS_NEW
+     * @see \cot\modules\payments\dictionaries\PaymentDictionary::STATUS_PROCESS
+     * @see \cot\modules\payments\dictionaries\PaymentDictionary::STATUS_PAID
+     * @see \cot\modules\payments\dictionaries\PaymentDictionary::STATUS_DONE
      */
-    public static function setStatus(
+    public function setStatus(
         int $paymentId,
         string $status,
         ?string $paymentSystem = null,
@@ -45,7 +50,7 @@ class PaymentService
         ?string $paymentSystemPaymentId = null,
         ?string $transaction = null
     ) {
-        $payment = PaymentRepository::getById($paymentId);
+        $payment = PaymentRepository::getInstance()->getById($paymentId);
         if ($payment === null) {
             throw new Exception('Payment not found');
         }
@@ -82,9 +87,9 @@ class PaymentService
             && $status === PaymentDictionary::STATUS_PAID
         ) {
             // Reload data from DB
-            $payment = PaymentRepository::getById($paymentId);
+            $payment = PaymentRepository::getInstance()->getById($paymentId);
 
-            self::processSuccessPayment($payment);
+            $this->processSuccessPayment($payment);
         }
 
         return $result > 0;
@@ -92,57 +97,21 @@ class PaymentService
 
     /**
      * Extensions should use the hook in this method to process their successful payments
-     * @param array $payment
-     * @return void
      */
-    private static function processSuccessPayment(array $payment): void
+    private function processSuccessPayment(array $payment): void
     {
-        if ($payment['pay_area'] === PaymentDictionary::PAYMENT_SOURCE_BALANCE) {
-            self::processSuccessBalancePayment($payment);
-            return;
-        }
+        // For hook handlers includes
+        global $L, $Ls, $R;
 
         /* === Hook === */
         foreach (cot_getextplugins('payments.payment.success') as $pl) {
             include $pl;
         }
         /* ===== */
-    }
 
-    private static function processSuccessBalancePayment(array $payment): void
-    {
-        self::setStatus($payment['pay_id'], PaymentDictionary::STATUS_DONE);
-
-        $user = cot_user_data($payment['pay_userid']);
-
-        $subject = Cot::$L['payments_balance_billing_admin_subject'];
-        $body = sprintf(
-            Cot::$L['payments_balance_billing_admin_body'],
-            !empty($user) ? $user['user_name'] : 'Unknown',
-            $payment['pay_summ'] . ' ' . Cot::$cfg['payments']['valuta'],
-            $payment['pay_id'],
-            cot_date('d.m.Y H:i', $payment['pay_pdate'])
-        );
-        cot_mail(Cot::$cfg['adminemail'], $subject, $body);
-
-        if (!empty($pay['pay_code'])) {
-            $dpay = PaymentRepository::getById($pay['pay_code']);
-            if (!empty($dpay)) {
-                $ubalance = cot_payments_getuserbalance($dpay['pay_userid']);
-                if (
-                    $ubalance >= $dpay['pay_summ']
-                    && self::setStatus($dpay['pay_id'], PaymentDictionary::STATUS_PAID)
-                ) {
-                    cot_payments_updateuserbalance($dpay['pay_userid'], -$dpay['pay_summ'], $dpay['pay_id']);
-                }
-            }
+        if ($payment['pay_area'] === PaymentDictionary::PAYMENT_SOURCE_BALANCE) {
+            UserBalanceService::getInstance()->processSuccessBalanceReplenishment($payment);
         }
-
-        /* === Hook === */
-        foreach (cot_getextplugins('payments.balance.billing.done') as $pl) {
-            include $pl;
-        }
-        /* ===== */
     }
 
     /**
@@ -150,7 +119,7 @@ class PaymentService
      * @param ?int $paymentId cot_payments.pay_id
      * @return string
      */
-    public static function getSuccessUrl(?int $paymentId = null): string
+    public function getSuccessUrl(?int $paymentId = null): string
     {
         $params = ['a' => 'result', 'result' => PaymentDictionary::RESULT_SUCCESS];
         if ($paymentId !== null) {
@@ -169,7 +138,7 @@ class PaymentService
      * @param ?int $paymentId cot_payments.pay_id
      * @return string
      */
-    public static function getFailUrl(?int $paymentId = null): string
+    public function getFailUrl(?int $paymentId = null): string
     {
         $params = ['a' => 'result', 'result' => PaymentDictionary::RESULT_FAIL];
         if ($paymentId !== null) {

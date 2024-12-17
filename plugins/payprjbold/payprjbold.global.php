@@ -6,8 +6,8 @@
  * [END_COT_EXT]
  */
 
-use cot\modules\payments\inc\PaymentDictionary;
-use cot\modules\payments\inc\PaymentService;
+use cot\modules\payments\dictionaries\PaymentDictionary;
+use cot\modules\payments\Services\PaymentService;
 
 defined('COT_CODE') or die('Wrong URL.');
 
@@ -17,7 +17,7 @@ require_once cot_incfile('payments', 'module');
 
 /**
  * @todo правильнее обновлять статус используя хук 'payments.payment.success'
- * @see PaymentService::processSuccessPayment()
+ * @see \cot\modules\payments\Services\PaymentService::processSuccessPayment()
  */
 if ($pays = cot_payments_getallpays('prj.bold', 'paid')) {
 	foreach ($pays as $pay) {
@@ -25,7 +25,7 @@ if ($pays = cot_payments_getallpays('prj.bold', 'paid')) {
 		$initialtime = ($adv['item_bold'] > Cot::$sys['now']) ? $adv['item_bold'] : Cot::$sys['now'];
 		$rboldexpire = $initialtime + $pay['pay_time'];
 
-		if (PaymentService::setStatus($pay['pay_id'], PaymentDictionary::STATUS_DONE)) {
+		if (PaymentService::getInstance()->setStatus($pay['pay_id'], PaymentDictionary::STATUS_DONE)) {
 			Cot::$db->update($db_projects,  array('item_bold' => (int)$rboldexpire), "item_id=".(int)$pay['pay_code']);
 
 			/* === Hook === */

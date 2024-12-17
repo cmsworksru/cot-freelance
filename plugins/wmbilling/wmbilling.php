@@ -15,9 +15,9 @@
  * @license BSD
  */
 
-use cot\modules\payments\inc\PaymentDictionary;
-use cot\modules\payments\inc\PaymentRepository;
-use cot\modules\payments\inc\PaymentService;
+use cot\modules\payments\dictionaries\PaymentDictionary;
+use cot\modules\payments\Repositories\PaymentRepository;
+use cot\modules\payments\Services\PaymentService;
 
 defined('COT_CODE') && defined('COT_PLUG') or die('Wrong URL');
 
@@ -30,7 +30,7 @@ $pid = cot_import('pid', 'G', 'INT');
 if (empty($m))
 {
 	// Получаем информацию о заказе
-	if (!empty($pid) && $pinfo = PaymentRepository::getById($pid))
+	if (!empty($pid) && $pinfo = PaymentRepository::getInstance()->getById($pid))
 	{
 		cot_block($usr['id'] == $pinfo['pay_userid']);
 		cot_block($pinfo['pay_status'] == 'new' || $pinfo['pay_status'] == 'process');
@@ -62,27 +62,19 @@ if (empty($m))
 		$t->parse("MAIN.WMFORM");
 
         // Изменяем статус "в процессе оплаты"
-        PaymentService::setStatus($pid, PaymentDictionary::STATUS_PROCESS, 'webmoney');
-	}
-	else
-	{
+        PaymentService::getInstance()->setStatus($pid, PaymentDictionary::STATUS_PROCESS, 'webmoney');
+	} else {
 		cot_die();
 	}
-}
-elseif ($m == 'success')
-{
+} elseif ($m == 'success') {
 	$pluginBody = $L['wmbilling_error_incorrect'];
 
-	if (isset($_GET['LMI_PAYMENT_NO']) && preg_match('/^\d+$/', $_GET['LMI_PAYMENT_NO']) == 1)
-	{
-		$pinfo = PaymentRepository::getById((int) $_GET['LMI_PAYMENT_NO']);
-		if ($pinfo['pay_status'] == 'done')
-		{
+	if (isset($_GET['LMI_PAYMENT_NO']) && preg_match('/^\d+$/', $_GET['LMI_PAYMENT_NO']) == 1) {
+		$pinfo = PaymentRepository::getInstance()->getById((int) $_GET['LMI_PAYMENT_NO']);
+		if ($pinfo['pay_status'] == 'done') {
 			$pluginBody = $L['wmbilling_error_done'];
 			$redirect = $pinfo['pay_redirect'];
-		}
-		elseif ($pinfo['pay_status'] == 'paid')
-		{
+		} elseif ($pinfo['pay_status'] == 'paid') {
 			$pluginBody = $L['wmbilling_error_paid'];
 		}
 	}

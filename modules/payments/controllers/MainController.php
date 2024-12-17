@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace cot\modules\payments\controllers;
 
 use Cot;
-use cot\modules\payments\inc\PaymentDictionary;
-use cot\modules\payments\inc\PaymentRepository;
+use cot\modules\payments\dictionaries\PaymentDictionary;
+use cot\modules\payments\Repositories\PaymentRepository;
 
 /**
  * Payments module
@@ -26,7 +26,7 @@ class MainController
         $payment = null;
         $paymentId = cot_import('pid', 'G', 'INT');
         if ($paymentId > 0) {
-            $payment = PaymentRepository::getById($paymentId);
+            $payment = PaymentRepository::getInstance()->getById($paymentId);
             if (!$payment) {
                 cot_die_message(404);
             }

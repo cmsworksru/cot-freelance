@@ -2,9 +2,10 @@
 
 declare(strict_types=1);
 
-namespace cot\modules\payments\inc;
+namespace cot\modules\payments\Repositories;
 
 use Cot;
+use cot\traits\GetInstanceTrait;
 
 /**
  * Payments module
@@ -16,13 +17,15 @@ use Cot;
  */
 class PaymentRepository
 {
-    public static function getById(int $id): ?array
+    use GetInstanceTrait;
+
+    public function getById(int $id): ?array
     {
         $table = Cot::$db->quoteTableName(Cot::$db->payments);
         $condition['id'] = "{$table}.pay_id = :paymentId";
         $params['paymentId'] = $id;
 
-        $result = self::getByCondition($condition, $params);
+        $result = $this->getByCondition($condition, $params);
 
         return !empty($result) ? array_shift($result) : null;
     }
@@ -30,7 +33,7 @@ class PaymentRepository
     /**
      * @return array<int, <array<string, int|string>> Return payment data indexed by id
      */
-    public static function getByCondition(array $condition, array $params = []): array
+    public function getByCondition(array $condition, array $params = []): array
     {
         $tableName = Cot::$db->quoteTableName(Cot::$db->payments);
 
@@ -50,14 +53,14 @@ class PaymentRepository
 
         $result = [];
         foreach ($items as $item) {
-            $item = self::castAttributes($item);
+            $item = $this->castAttributes($item);
             $result[$item['pay_id']] = $item;
         }
 
         return $result;
     }
 
-    public static function castAttributes(array $data): array
+    public function castAttributes(array $data): array
     {
         $data['pay_id'] = (int) $data['pay_id'];
         $data['pay_userid'] = (int) $data['pay_userid'];

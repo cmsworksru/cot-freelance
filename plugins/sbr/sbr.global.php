@@ -6,8 +6,8 @@
  * [END_COT_EXT]
  */
 
-use cot\modules\payments\inc\PaymentDictionary;
-use cot\modules\payments\inc\PaymentService;
+use cot\modules\payments\dictionaries\PaymentDictionary;
+use cot\modules\payments\Services\PaymentService;
 
 defined('COT_CODE') or die('Wrong URL.');
 
@@ -18,11 +18,11 @@ require_once cot_incfile('projects', 'module');
 /**
  * Проверяем платежки на оплату сделок. Если есть то активируем сделки.
  * @todo правильнее обновлять статус используя хук 'payments.payment.success'
- * @see PaymentService::processSuccessPayment()
+ * @see \cot\modules\payments\Services\PaymentService::processSuccessPayment()
  */
 if ($sbrpays = cot_payments_getallpays('sbr', 'paid')) {
 	foreach ($sbrpays as $pay) {
-		if (PaymentService::setStatus($pay['pay_id'], PaymentDictionary::STATUS_DONE)) {
+		if (PaymentService::getInstance()->setStatus($pay['pay_id'], PaymentDictionary::STATUS_DONE)) {
 			if ($sbr = $db->query("SELECT * FROM $db_sbr WHERE sbr_id=" . $pay['pay_code'])->fetch()) {
 				// Запуск сделки на исполнение
 				if ($db->update($db_sbr, array('sbr_status' => 'process', 'sbr_begin' => $sys['now']), "sbr_id=" . $pay['pay_code'])){

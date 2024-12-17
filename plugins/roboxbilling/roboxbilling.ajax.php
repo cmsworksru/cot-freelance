@@ -16,8 +16,8 @@
  * @license BSD
  */
 
-use cot\modules\payments\inc\PaymentDictionary;
-use cot\modules\payments\inc\PaymentService;
+use cot\modules\payments\dictionaries\PaymentDictionary;
+use cot\modules\payments\Services\PaymentService;
 
 defined('COT_CODE') or die('Wrong URL');
 
@@ -43,7 +43,7 @@ if ($my_crc != $crc) {
 }
 
 // Обновляем статус платежа на "оплачен"
-if (PaymentService::setStatus($inv_id, PaymentDictionary::STATUS_PAID, 'robox')) {
+if (PaymentService::getInstance()->setStatus($inv_id, PaymentDictionary::STATUS_PAID, 'robox')) {
     echo "OK$inv_id\n";
 } else {
     echo "Error of update order status!";

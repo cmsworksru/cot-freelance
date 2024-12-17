@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace cot\modules\payments\inc;
+namespace cot\modules\payments\dictionaries;
 
 /**
  * Payments module
@@ -42,4 +42,6 @@ class PaymentDictionary
     public const METHOD_CARD = 'card';
 
     public const PAYMENT_SOURCE_BALANCE = 'balance';
+    public const PAYMENT_SOURCE_TRANSFER = 'transfer';
+    public const PAYMENT_SYSTEM_BALANCE = 'UserBalance';
 }

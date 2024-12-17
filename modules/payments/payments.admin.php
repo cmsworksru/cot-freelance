@@ -14,7 +14,7 @@ Hooks=admin
  * @license BSD
  */
 
-use cot\modules\payments\inc\PaymentDictionary;
+use cot\modules\payments\dictionaries\PaymentDictionary;
 
 (defined('COT_CODE') && defined('COT_ADMIN')) or die('Wrong URL.');
 
@@ -110,55 +110,81 @@ if($p == 'payouts')
 		$t->parse('MAIN.PAYOUTS.PAYOUT_ROW');
 	}
 	$t->parse('MAIN.PAYOUTS');
-}
-elseif($p == 'transfers')
-{
-	
-	if($a == 'done' && isset($id)){
+} elseif($p == 'transfers') {
+	if ($a == 'done' && isset($id)) {
+		$transfer = Cot::$db->query(
+            'SELECT * FROM ' . Cot::$db->payments_transfers . ' AS t '
+			//. 'LEFT JOIN $db_users AS u ON u.user_id=t.trn_from '
+			. "WHERE trn_status='process' AND trn_id = :transferId",
+            ['transferId' => $id]
+        )->fetch();
 
-		$transfer = $db->query("SELECT * FROM $db_payments_transfers AS t
-			LEFT JOIN $db_users AS u ON u.user_id=t.trn_from
-			WHERE trn_status='process' AND trn_id=".$id)->fetch();
-
-		$rtransfer['trn_done'] = $sys['now'];
+		$rtransfer['trn_done'] = Cot::$sys['now'];
 		$rtransfer['trn_status'] = 'done';
 
-        $taxsumm = 0;
+        $feeAmount = 0;
         if (!empty(Cot::$cfg['payments']['transfertax'])) {
-            $taxsumm = $transfer['trn_summ'] * ((float) Cot::$cfg['payments']['transfertax']) / 100;
+            $feeAmount = $transfer['trn_summ'] * ((float) Cot::$cfg['payments']['transfertax']) / 100;
         }
 
         if (Cot::$cfg['payments']['transfertaxfromrecipient']) {
-			$sendersumm = $transfer['trn_summ'];
-			$recipientsumm = $transfer['trn_summ'] - $taxsumm;
+			$senderAmount = $transfer['trn_summ'];
+			$recipientAmount = $transfer['trn_summ'] - $feeAmount;
 		} else {
-			$sendersumm = $transfer['trn_summ'] + $taxsumm;
-			$recipientsumm = $transfer['trn_summ'];
+			$senderAmount = $transfer['trn_summ'] + $feeAmount;
+			$recipientAmount = $transfer['trn_summ'];
 		}
 
-		$recipient = $db->query("SELECT * FROM $db_users WHERE user_id=".$transfer['trn_to']." LIMIT 1")->fetch();
+        $sender = cot_user_data((int) $transfer['trn_from']);
+		$recipient = cot_user_data((int) $transfer['trn_to']);
+
+        $senderName = cot_user_full_name($sender);
+        if ($senderName !== $sender['user_name']) {
+            $senderName .= ' (' . $sender['user_name'] . ')';
+        }
+
+        $recipientName = cot_user_full_name($recipient);
+        if ($recipientName !== $recipient['user_name']) {
+            $recipientName .= ' (' . $recipient['user_name'] . ')';
+        }
 
 		$payinfo['pay_userid'] = $transfer['trn_to'];
-		$payinfo['pay_area'] = 'balance';
-		$payinfo['pay_code'] = $pid;
-		$payinfo['pay_summ'] = $recipientsumm;
-		$payinfo['pay_cdate'] = $sys['now'];
-		$payinfo['pay_pdate'] = $sys['now'];
-		$payinfo['pay_adate'] = $sys['now'];
-		$payinfo['pay_status'] = 'done';
+		$payinfo['pay_area'] = PaymentDictionary::PAYMENT_SOURCE_BALANCE;
+		//$payinfo['pay_code'] = $pid;
+		$payinfo['pay_summ'] = $recipientAmount;
+		$payinfo['pay_cdate'] = Cot::$sys['now'];
+		$payinfo['pay_pdate'] = Cot::$sys['now'];
+		$payinfo['pay_adate'] = Cot::$sys['now'];
+		$payinfo['pay_status'] = PaymentDictionary::STATUS_DONE;
 		$payinfo['pay_desc'] = sprintf($L['payments_balance_transfer_desc'], $transfer['user_name'], $recipient['user_name'], $transfer['trn_comment']);
 
-		$db->insert($db_payments, $payinfo);
-		$pid = $db->lastInsertId();
+        Cot::$db->insert(Cot::$db->payments, $payinfo);
+		$paymentId = Cot::$db->lastInsertId();
 		
-		if($pid)
-		{
-			// Отправка уведомления админу о переводе между пользователями
-			$subject = $L['payments_balance_transfer_recipient_subject'];
-			$body = sprintf($L['payments_balance_transfer_recipient_body'], $usr['name'], $recipient['user_name'], $transfer['trn_summ'], $taxsumm, $sendersumm, $recipientsumm, $cfg['payments']['valuta'], cot_date('d.m.Y в H:i', $sys['now']), $transfer['trn_comment']);
+		if ($paymentId) {
+			// Отправка уведомления получателю о переводе на его счет
+			$subject = Cot::$L['payments_balance_transfer_recipient_subject'];
+			$body = sprintf(
+                Cot::$L['payments_balance_transfer_recipient_body'],
+                $senderName,
+                $recipientName,
+                $transfer['trn_summ'],
+                $feeAmount,
+                $senderAmount,
+                $recipientAmount,
+                Cot::$cfg['payments']['valuta'],
+                cot_date('datetime_medium', Cot::$sys['now']),
+                $transfer['trn_comment']
+            );
 			cot_mail($recipient['user_email'], $subject, $body);
 
-			$db->update($db_payments_transfers, $rtransfer, "trn_id=".$id);
+            Cot::$db->update($db_payments_transfers, $rtransfer, 'trn_id = ' . $id);
+
+            /* === Hook === */
+            foreach (cot_getextplugins('payments.balance.transfer.done') as $pl) {
+                include $pl;
+            }
+            /* ===== */
 		}
 
 		cot_redirect(cot_url('admin', 'm=payments&p=transfers'));

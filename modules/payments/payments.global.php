@@ -14,7 +14,7 @@ Hooks=global
  * @license BSD
  */
 
-use cot\modules\payments\inc\PaymentDictionary;
+use cot\modules\payments\dictionaries\PaymentDictionary;
 
 defined('COT_CODE') or die('Wrong URL.');
 

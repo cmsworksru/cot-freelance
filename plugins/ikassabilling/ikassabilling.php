@@ -15,9 +15,9 @@
  * @license BSD
  */
 
-use cot\modules\payments\inc\PaymentDictionary;
-use cot\modules\payments\inc\PaymentRepository;
-use cot\modules\payments\inc\PaymentService;
+use cot\modules\payments\dictionaries\PaymentDictionary;
+use cot\modules\payments\Repositories\PaymentRepository;
+use cot\modules\payments\Services\PaymentService;
 
 defined('COT_CODE') && defined('COT_PLUG') or die('Wrong URL');
 
@@ -30,7 +30,7 @@ $pid = cot_import('pid', 'G', 'INT');
 if (empty($m))
 {
 	// Получаем информацию о заказе
-	if (!empty($pid) && $pinfo = PaymentRepository::getById($pid))
+	if (!empty($pid) && $pinfo = PaymentRepository::getInstance()->getById($pid))
 	{
 		cot_block($usr['id'] == $pinfo['pay_userid']);
 		cot_block($pinfo['pay_status'] == 'new' || $pinfo['pay_status'] == 'process');
@@ -52,7 +52,7 @@ if (empty($m))
 		$t->parse("MAIN.IKASSAFORM");
 
         // Изменяем статус "в процессе оплаты"
-        PaymentService::setStatus($pid, PaymentDictionary::STATUS_PROCESS, 'ikassa');
+        PaymentService::getInstance()->setStatus($pid, PaymentDictionary::STATUS_PROCESS, 'ikassa');
 	} else {
 		cot_die();
 	}
@@ -69,7 +69,7 @@ if (empty($m))
 	if($status_data['ik_inv_st'] == 'success' && $status_data['ik_co_id'] == $cfg['plugin']['ikassabilling']['shop_id']) {
 		
 		// проверка наличия номера платежки и ее статуса
-		$pinfo = PaymentRepository::getById($status_data['ik_pm_no']);
+		$pinfo = PaymentRepository::getInstance()->getById($status_data['ik_pm_no']);
 		if ($pinfo['pay_status'] == 'done')
 		{
 			$pluginBody = $L['ikassabilling_error_done'];

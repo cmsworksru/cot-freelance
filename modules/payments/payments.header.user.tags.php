@@ -5,6 +5,8 @@ Hooks=header.user.tags
 [END_COT_EXT]
 ==================== */
 
+use cot\modules\payments\Services\UserBalanceService;
+
 /**
  * Payments module
  *
@@ -26,7 +28,7 @@ if (defined('COT_ADMIN') || Cot::$env['ext'] === 'admin') {
 
 if (Cot::$cfg['payments']['balance_enabled']) {
 	$t->assign([
-		'HEADER_USER_BALANCE' => cot_payments_getuserbalance(Cot::$usr['id']),
+		'HEADER_USER_BALANCE' => (float) UserBalanceService::getInstance()->getByUserId(Cot::$usr['id']),
 		'HEADER_USER_BALANCE_URL' => cot_url('payments', 'm=balance'),
 	]);
 }

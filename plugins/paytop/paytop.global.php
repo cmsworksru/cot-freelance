@@ -6,8 +6,8 @@
  * [END_COT_EXT]
  */
 
-use cot\modules\payments\inc\PaymentDictionary;
-use cot\modules\payments\inc\PaymentService;
+use cot\modules\payments\dictionaries\PaymentDictionary;
+use cot\modules\payments\Services\PaymentService;
 
 defined('COT_CODE') or die('Wrong URL.');
 
@@ -24,7 +24,7 @@ foreach($pt_cfg as $area => $opt) {
 	if ($toppays = cot_payments_getallpays('paytop.'.$area, 'paid')) {
 		foreach ($toppays as $pay) {
 			if (cot_payments_userservice('paytop.'.$area, $pay['pay_userid'], $pay['pay_time'])) {
-				if (PaymentService::setStatus($pay['pay_id'], PaymentDictionary::STATUS_DONE)) {
+				if (PaymentService::getInstance()->setStatus($pay['pay_id'], PaymentDictionary::STATUS_DONE)) {
 					$urr = Cot::$db->query("SELECT * FROM $db_users WHERE user_id=".$pay['pay_userid'])->fetch();
 
 					// Отправка уведомления админу

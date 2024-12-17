@@ -17,9 +17,9 @@ declare(strict_types=1);
  * @license BSD
  */
 
-use cot\modules\payments\inc\PaymentDictionary;
-use cot\modules\payments\inc\PaymentRepository;
-use cot\modules\payments\inc\PaymentService;
+use cot\modules\payments\dictionaries\PaymentDictionary;
+use cot\modules\payments\Repositories\PaymentRepository;
+use cot\modules\payments\Services\PaymentService;
 
 defined('COT_CODE') && defined('COT_PLUG') or die('Wrong URL');
 
@@ -32,7 +32,7 @@ if (empty($pid)) {
 }
 
 // Получаем информацию о заказе
-$payment = PaymentRepository::getById($pid);
+$payment = PaymentRepository::getInstance()->getById($pid);
 if ($payment === null) {
     cot_die_message(404);
 }
@@ -40,12 +40,14 @@ if ($payment === null) {
 cot_block(Cot::$usr['id'] === $payment['pay_userid']);
 cot_block(in_array($payment['pay_status'], PaymentDictionary::ALLOW_PAYMENT_STATUSES, true));
 
+$paymentService = PaymentService::getInstance();
+
 // Изменяем статус "в процессе оплаты"
-PaymentService::setStatus($pid, PaymentDictionary::STATUS_PROCESS, 'nullbilling');
+$paymentService->setStatus($pid, PaymentDictionary::STATUS_PROCESS, 'nullbilling');
 
 // Изменяем статус "Оплачено"
-if (PaymentService::setStatus($pid, PaymentDictionary::STATUS_PAID, 'nullbilling')) {
-    cot_redirect(PaymentService::getSuccessUrl($pid));
+if ($paymentService->setStatus($pid, PaymentDictionary::STATUS_PAID, 'nullbilling')) {
+    cot_redirect($paymentService->getSuccessUrl($pid));
 } else {
-    cot_redirect(PaymentService::getFailUrl($pid));
+    cot_redirect($paymentService->getFailUrl($pid));
 }

@@ -6,8 +6,8 @@
  * [END_COT_EXT]
  */
 
-use cot\modules\payments\inc\PaymentDictionary;
-use cot\modules\payments\inc\PaymentService;
+use cot\modules\payments\dictionaries\PaymentDictionary;
+use cot\modules\payments\Services\PaymentService;
 
 defined('COT_CODE') or die('Wrong URL.');
 
@@ -26,7 +26,7 @@ if ($propays = cot_payments_getallpays('pro', 'paid')) {
 		$initialtime = ($upro > cot::$sys['now']) ? $upro : cot::$sys['now'];
 		$rproexpire = $initialtime + $pay['pay_time'];
 
-		if (PaymentService::setStatus($pay['pay_id'], PaymentDictionary::STATUS_DONE)) {
+		if (PaymentService::getInstance()->setStatus($pay['pay_id'], PaymentDictionary::STATUS_DONE)) {
 			cot::$db->update($db_users,  array('user_pro' => (int) $rproexpire), "user_id=" . (int) $userid);
 
 			/* === Hook === */
@@ -37,5 +37,3 @@ if ($propays = cot_payments_getallpays('pro', 'paid')) {
 		}
 	}
 }
-
-?>

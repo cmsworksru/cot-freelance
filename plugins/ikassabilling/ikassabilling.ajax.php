@@ -15,9 +15,9 @@
  * @license BSD
  */
 
-use cot\modules\payments\inc\PaymentDictionary;
-use cot\modules\payments\inc\PaymentRepository;
-use cot\modules\payments\inc\PaymentService;
+use cot\modules\payments\dictionaries\PaymentDictionary;
+use cot\modules\payments\Repositories\PaymentRepository;
+use cot\modules\payments\Services\PaymentService;
 
 defined('COT_CODE') or die('Wrong URL');
 
@@ -58,7 +58,7 @@ $signString = implode(':', $dataSet);
 $sign = base64_encode(md5($signString, true)); 
 
 if(!empty($dataSet['ik_pm_no'])) {
-	$payinfo = PaymentRepository::getById($dataSet['ik_pm_no']);
+	$payinfo = PaymentRepository::getInstance()->getById($dataSet['ik_pm_no']);
 }
 
 if (
@@ -67,7 +67,7 @@ if (
 	&& $dataSet['ik_co_id'] == $cfg['plugin']['ikassabilling']['shop_id'])
 {
     if (
-        PaymentService::setStatus(
+        PaymentService::getInstance()->setStatus(
             $dataSet['ik_pm_no'],
             PaymentDictionary::STATUS_PAID,
             'ikassa'
