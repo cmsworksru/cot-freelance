@@ -4,10 +4,10 @@
  * Code=market
  * Name=Market
  * Description=Магазин
- * Version=2.6.1
- * Date=2022-09-08
+ * Version=2.6.2
+ * Date=2025-01-02
  * Author=CMSWorks Team
- * Copyright=Copyright &copy; CMSWorks.ru, littledev.ru
+ * Copyright=Copyright &copy; CMSWorks.ru, littledev.ru, Cotonti Team
  * Notes=
  * Auth_guests=R
  * Lock_guests=12345A
@@ -47,12 +47,11 @@
 */
 
 /**
- * market module
+ * Market module
  *
  * @package market
- * @version 2.6.1
  * @author CMSWorks Team
- * @copyright Copyright (c) CMSWorks.ru, littledev.ru
+ * @copyright Copyright (c) CMSWorks.ru, littledev.ru, Cotonti Team
  * @license BSD
  */
 
