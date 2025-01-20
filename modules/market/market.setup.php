@@ -13,6 +13,7 @@
  * Lock_guests=12345A
  * Auth_members=RW
  * Lock_members=
+ * Requires_modules=payments
  * Requires_plugins=
  * [END_COT_EXT]
 
