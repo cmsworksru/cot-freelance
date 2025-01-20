@@ -26,5 +26,3 @@ else
 	$temp_array['TOP'] = 0;
 	$temp_array['ISTOP'] = 0;
 }
-	
-?>

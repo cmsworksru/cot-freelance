@@ -5,9 +5,9 @@
  * Name=User Categories
  * Category=community-social
  * Description=Add custom categories for users
- * Version=2.6.4
- * Date=2025-01-02
- * Author=CMSWorks Team
+ * Version=2.6.5
+ * Date=2025-01-20
+ * Author=CMSWorks Team, Cotonti Team
  * Copyright=Copyright (c) CMSWorks.ru, littledev.ru, Cotonti Team
  * Auth_guests=R
  * Lock_guests=W12345A

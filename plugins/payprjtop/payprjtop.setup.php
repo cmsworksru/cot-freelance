@@ -5,10 +5,10 @@
  * Name=Payprjtop
  * Category=Payments
  * Description=Услуга "Закрепить проект"
- * Version=1.0.1
+ * Version=1.0.2
  * Date=
- * Author=CMSWorks Team
- * Copyright=Copyright (c) CMSWorks.ru, littledev.ru
+ * Author=CMSWorks Team, Cotonti team
+ * Copyright=Copyright (c) CMSWorks.ru, littledev.ru, Cotonti team
  * Notes=
  * Auth_guests=R
  * Lock_guests=12345A
@@ -27,10 +27,7 @@
  * PayPrjTop Plugin
  *
  * @package payprjtop
- * @version 1.0.1
- * @author CMSWorks Team
+  * @author CMSWorks Team
  * @copyright Copyright (c) CMSWorks.ru, littledev.ru
  * @license BSD
  */
-
-?>

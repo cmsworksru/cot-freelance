@@ -3,9 +3,8 @@
  * Installation handler
  *
  * @package usercategories
- * @version 2.5.2
- * @author CMSWorks Team
- * @copyright Copyright (c) CMSWorks.ru, littledev.ru
+ * @author CMSWorks Team, Cotonti Team
+ * @copyright Copyright (c) CMSWorks.ru, littledev.ru, Cotonti Team
  * @license BSD
  */
 
@@ -14,13 +13,14 @@ defined('COT_CODE') or die('Wrong URL');
 global $db_users;
 
 require_once cot_incfile('usercategories', 'plug');
-require_once cot_incfile('extrafields');
+//require_once cot_incfile('extrafields');
 require_once cot_incfile('structure');
 
 // Add field if missing
-if (!$db->fieldExists($db_users, "user_cats"))
-{
-	$dbres = $db->query("ALTER TABLE `$db_users` ADD COLUMN `user_cats` TEXT collate utf8_unicode_ci NOT NULL");
+if (!Cot::$db->fieldExists($db_users, "user_cats")) {
+	Cot::$db->query(
+        'ALTER TABLE ' . Cot::$db->users . ' ADD COLUMN user_cats TEXT NOT NULL DEFAULT NULL'
+    );
 }
 
 cot_structure_add('usercategories', array('structure_area' => 'usercategories', 'structure_code' => 'programming', 'structure_title' => 'Программирование', 'structure_path' => '001'));

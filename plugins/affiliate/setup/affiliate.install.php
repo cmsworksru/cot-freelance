@@ -4,7 +4,6 @@ defined('COT_CODE') or die('Wrong URL');
 
 global $db_users;
 
-if (!$db->fieldExists($db_users, "user_referal"))
-{
-	$db->query("ALTER TABLE `$db_users` ADD COLUMN `user_referal` int(11) NOT NULL");
+if (!Cot::$db->fieldExists(Cot::$db->users, "user_referal")) {
+    Cot::$db->query('ALTER TABLE '. Cot::$db->users . ' ADD COLUMN user_referal INT NOT NULL DEFAULT 0');
 }

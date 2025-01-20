@@ -26,7 +26,7 @@ require cot_langfile('verification', 'plug');
 
 $t = new XTemplate(cot_tplfile('verification.tools', 'plug', true));
 
-$adminhelp = $L['ver_tools_help'];
+$adminHelp = $L['ver_tools_help'];
 $adminsubtitle = $L['ver_tools_title'];
 
                 $fi=0;
@@ -62,5 +62,5 @@ if (COT_AJAX)
 }
 else
 {
-	$adminmain = $t->text('MAIN');
+    $adminMain = $t->text('MAIN');
 }

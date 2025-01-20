@@ -5,10 +5,10 @@ Code=affiliate
 Name=Affiliate
 Category=
 Description=Партнерская программа
-Version=1.1.3
-Date=2015-01-06
-Author=CMSWorks Team
-Copyright=CMSWorks Team 2010-2016
+Version=1.1.4
+Date=2025-01-20
+Author=CMSWorks Team, Cotonti team
+Copyright=2010-2016 CMSWorks Team, 2025 Cotonti team
 Notes=BSD License
 SQL=
 Auth_guests=R
@@ -28,5 +28,3 @@ Requires_modules=payments
 ==================== */
 
 defined('COT_CODE') or die('Wrong URL');
-
-?>

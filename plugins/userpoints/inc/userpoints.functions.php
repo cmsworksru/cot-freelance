@@ -1,21 +1,18 @@
 <?php
-
 /**
  * UserPoints plugin
  *
  * @package userpoints
- * @version 2.0.0
- * @author CMSWorks Team
- * @copyright Copyright (c) CMSWorks.ru, littledev.ru
+ * @author CMSWorks Team, Cotonti team
+ * @copyright Copyright (c) CMSWorks.ru, littledev.ru, Cotonti team
  * @license BSD
  */
 
 // Requirements
 require_once cot_langfile('userpoints', 'plug');
 
-// Global variables
-global $db_userpoints, $db_x;
-$db_userpoints = (isset($db_userpoints)) ? $db_userpoints : $db_x . 'userpoints';
+// Register table name
+Cot::$db->registerTable('userpoints');
 
 function cot_setuserpoints($points, $type, $userid, $itemid = 0)
 {
