@@ -168,10 +168,12 @@ $L['payments_code'] = 'Код';
 $L['payments_desc'] = 'Назначение';
 $L['payments_summ'] = 'Сумма';
 
+$L['payments_payment_already_made'] = 'Платеж уже оплачен';
 $L['payments_payment_system'] = 'Платежная система';
 $L['payments_payment_method'] = 'Платежный метод';
 $L['payments_payment_id'] = 'ID платежа';
 $L['payments_payment_id_hint'] = 'на нашей стороне';
+$L['payments_payment_not_allowed'] = 'Нельзя совершить оплату';
 $L['payments_transaction'] = 'Транзакция';
 $L['payments_transaction_hint'] = 'на стороне ПС';
 

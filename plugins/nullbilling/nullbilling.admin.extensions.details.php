@@ -12,7 +12,7 @@ declare(strict_types=1);
  *
  * @package nullbilling
  * @author CMSWorks Team, Alexey Kalnov
- * @copyright (c) CMSWorks.ru, 2024 Alexey Kalnov, Lily Software https://lily-software.com
+ * @copyright (c) CMSWorks.ru, 2024-2025 Alexey Kalnov, Lily Software https://lily-software.com
  * @license BSD
  *
  * @var string $type
@@ -20,9 +20,11 @@ declare(strict_types=1);
  * @var XTemplate $t
  */
 
+use cot\extensions\ExtensionsDictionary;
+
 defined('COT_CODE') or die('Wrong URL');
 
-if ($type === COT_EXT_TYPE_PLUGIN && $code === 'nullbilling') {
+if ($type === ExtensionsDictionary::TYPE_PLUGIN && $code === 'nullbilling') {
     $standalone = null;
     $t->assign([
         'ADMIN_EXTENSIONS_JUMPTO_URL' => $standalone,

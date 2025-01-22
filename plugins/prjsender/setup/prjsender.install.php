@@ -10,6 +10,6 @@ if (!Cot::$db->fieldExists($db_users, 'user_prjsenderdate')) {
 
 if (!Cot::$db->fieldExists($db_users, 'user_prjsendercats')) {
     Cot::$db->query(
-        'ALTER TABLE ' . Cot::$db->users . ' ADD COLUMN user_prjsendercats MEDIUMTEXT NOT NULL DEFAULT NULL'
+        'ALTER TABLE ' . Cot::$db->users . ' ADD COLUMN user_prjsendercats MEDIUMTEXT NULL DEFAULT NULL'
     );
 }

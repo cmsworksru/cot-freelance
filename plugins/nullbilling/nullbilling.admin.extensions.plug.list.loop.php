@@ -20,9 +20,11 @@ declare(strict_types=1);
  * @var XTemplate $t
  */
 
+use cot\extensions\ExtensionsDictionary;
+
 defined('COT_CODE') or die('Wrong URL');
 
-if ($type === COT_EXT_TYPE_PLUGIN && $code === 'nullbilling') {
+if ($type === ExtensionsDictionary::TYPE_PLUGIN && $code === 'nullbilling') {
     $t->assign([
         'ADMIN_EXTENSIONS_JUMPTO_URL' => null,
     ]);

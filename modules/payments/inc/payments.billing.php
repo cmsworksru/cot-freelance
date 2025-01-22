@@ -1,15 +1,14 @@
 <?php
-
 /**
  * Payments module
  *
  * @package payments
- * @version 1.1.2
- * @author CMSWorks Team
- * @copyright Copyright (c) CMSWorks.ru
+ * @author CMSWorks Team, Cotonti team
+ * @copyright Copyright (c) CMSWorks.ru, Cotonti team
  * @license BSD
  */
 
+use cot\modules\payments\dictionaries\PaymentDictionary;
 use cot\modules\payments\Repositories\PaymentRepository;
 use cot\modules\payments\Services\UserBalanceService;
 
@@ -46,8 +45,25 @@ if ($payment === null) {
     cot_redirect(cot_url('payments', 'm=error&msg=2', '', true));
 }
 
-// Блокируем доступ к несобственным платежкам
+// Block access to other user's payments
 cot_block(Cot::$usr['id'] == $payment['pay_userid']);
+
+// Don't allow duplicate payment with statuses 'payed' or 'done'.
+if (
+    in_array(
+        $payment['pay_status'],
+        [PaymentDictionary::STATUS_PAID, PaymentDictionary::STATUS_DONE],
+        true
+    )
+) {
+    cot_error(Cot::$L['payments_payment_already_made']);
+    cot_redirect(cot_url('payments', ['m' => 'balance'], '', true));
+}
+
+if (!in_array($payment['pay_status'], PaymentDictionary::ALLOW_PAYMENT_STATUSES, true)) {
+    cot_error(Cot::$L['payments_payment_not_allowed']);
+    cot_redirect(cot_url('payments', ['m' => 'balance'], '', true));
+}
 
 // Если счета пользователей	включены, то оплата всех услуг производится со счета пользователя.
 // Проверяем баланс и, если средств достаточно - оплачиваем с баланса.

@@ -19,7 +19,7 @@ require_once cot_incfile('structure');
 // Add field if missing
 if (!Cot::$db->fieldExists($db_users, "user_cats")) {
 	Cot::$db->query(
-        'ALTER TABLE ' . Cot::$db->users . ' ADD COLUMN user_cats TEXT NOT NULL DEFAULT NULL'
+        'ALTER TABLE ' . Cot::$db->users . ' ADD COLUMN user_cats TEXT NULL DEFAULT NULL'
     );
 }
 

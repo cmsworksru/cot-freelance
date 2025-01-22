@@ -15,9 +15,8 @@ require_once cot_incfile('extrafields');
 require_once cot_incfile('structure');
 
 // Add field if missing
-if (!$db->fieldExists($db_users, "user_cats"))
-{
-	$dbres = $db->query("ALTER TABLE `$db_users` ADD COLUMN `user_cats` TEXT collate utf8_unicode_ci NOT NULL");
+if (!$db->fieldExists($db_users, "user_cats")) {
+	$dbres = $db->query("ALTER TABLE `$db_users` ADD COLUMN `user_cats` TEXT NULL DEFAULT NULL");
 }
 
 $sql = $db->query("SELECT * FROM $db_usercategories WHERE 1");
