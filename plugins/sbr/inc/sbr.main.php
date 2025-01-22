@@ -26,26 +26,24 @@ foreach (cot_getextplugins('sbr.first') as $pl)
 }
 /* ===== */
 
-if ($id > 0)
-{
-	$query_string = (!$usr['isadmin']) ? " AND (sbr_employer=".$usr['id']." OR sbr_performer=".$usr['id'].")" : "";
-	$sql = $db->query("SELECT * FROM $db_sbr WHERE sbr_id=" . $id . " " . $query_string . " LIMIT 1");
+if (empty($id) || $id < 1) {
+    cot_die_message(404);
 }
 
-if (!$id || !$sql || $sql->rowCount() == 0)
-{
-	cot_block();
+$query_string = (!$usr['isadmin']) ? " AND (sbr_employer=".$usr['id']." OR sbr_performer=".$usr['id'].")" : "";
+$sql = Cot::$db->query("SELECT * FROM $db_sbr WHERE sbr_id=" . $id . " " . $query_string . " LIMIT 1");
+if ($sql->rowCount() == 0) {
+    cot_die_message(404);
 }
+
 $sbr = $sql->fetch();
 
 // Действия только для Заказчика
-if($usr['id'] == $sbr['sbr_employer'])
-{
+if ($usr['id'] == $sbr['sbr_employer']) {
 	$role = 'employer';
 	
 	// Если сделка согласована, то можно оплатить.
-	if($a == 'pay' && $sbr['sbr_status'] == 'confirm')
-	{
+	if ($a == 'pay' && $sbr['sbr_status'] == 'confirm') {
 		/* === Hook === */
 		foreach (cot_getextplugins('sbr.pay.first') as $pl)
 		{
