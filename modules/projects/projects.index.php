@@ -127,8 +127,8 @@ foreach($sqllist_rowset as $item)
 $extp = cot_getextplugins('projects.index.loop');
 /* ===== */
 
-foreach($sqllist_rowset as $item)
-{
+$jj = 0;
+foreach ($sqllist_rowset as $item) {
 	$jj++;
 	$t_pr->assign(cot_generate_usertags($item, 'PRJ_ROW_OWNER_'));
 	$t_pr->assign(cot_generate_projecttags($item, 'PRJ_ROW_', $cfg['projects']['shorttextlen'], $usr['isadmin'], $cfg['homebreadcrumb']));

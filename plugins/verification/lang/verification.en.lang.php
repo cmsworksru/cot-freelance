@@ -40,7 +40,7 @@ $L['ver_statusexist_title']='Your identity has been confirmed.';
 $L['ver_statusexist_desc']='You are a verified user. No need to go through the verification again.';
 $L['ver_exist_desc']='Your copy of the passport is on moderation. Please wait while the administration of the site will check your copy and change your status.';
 $L['ver_file_send_mess']='File sent for review.';
-$L['ver_file_send_mess_desc']='Moderator will check your passport copy in the near future.<br /> After checking your status will be changed to &laquo;identity confirmed&raquo; and next to the text icon will be displayed <img src="'.$cfg['plugins_dir'].'/verification/img/ver_icon.png" width="15" height="15" alt="identity confirmed" border="0">';
+$L['ver_file_send_mess_desc']='Moderator will check your passport copy in the near future.<br /> After checking your status will be changed to &laquo;identity confirmed&raquo; and next to the text icon will be displayed <img src="'.Cot::$cfg['plugins_dir'].'/verification/img/ver_icon.png" width="15" height="15" alt="identity confirmed" border="0">';
 $L['ver_file_title']='Select a scanned passport photo';
 $L['ver_file_ext']='Allowed file extensions';
 $L['ver_file_max']='The maximum image size';
@@ -63,7 +63,8 @@ $L['cfg_mail_notify'] = array('Email for alerts on new applications.','Leave bla
  */
 
 $L['ver_tools_title'] = 'Administration passport data users.';
-$L['ver_tools_help'] = 'After approval, the scan passport photos transferred to the folder &laquo;'.$ver_file_patch_new.'&raquo;';
+$L['ver_tools_help'] = 'After approval, the scan passport photos transferred to the folder &laquo;'
+    . ($ver_file_patch_new ?? '') . '&raquo;';
 $L['ver_tools_link_img'] = 'Link to scan passports';
 $L['ver_tools_view_img'] = 'See photos at full size';
 $L['ver_tools_close'] = 'Close';

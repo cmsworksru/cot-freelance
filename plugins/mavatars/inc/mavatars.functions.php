@@ -108,8 +108,7 @@ class mavatar
 				);
 			}
 		}
-		if (!$mav_cfg['__default']['__default'])
-		{
+		if (empty($mav_cfg['__default']['__default'])) {
 			$def_photodir = $this->fix_path($cfg['photos_dir']);
 			$mav_cfg['__default']['__default'] = array(
 				'filepath' => $def_photodir,

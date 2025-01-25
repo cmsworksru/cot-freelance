@@ -22,7 +22,8 @@ $L['affiliate_mail_newreferal_subject'] = 'Новый реферал';
 $L['affiliate_mail_newreferal_body'] = "Здравствуйте, %1\$s.\nПоздравляем, у вас появился новый реферал с логином: %2\$s.";
 
 $L['affiliate_mail_newpayment_subject'] = 'Партнерская выплата';
-$L['affiliate_mail_newpayment_body'] = 'Поздравляем, на ваш счет поступила выплата по партнерской программе в размере: %1$s '.$cfg['payments']['valuta'];
+$L['affiliate_mail_newpayment_body'] = 'Поздравляем, на ваш счет поступила выплата по партнерской программе в размере: %1$s '
+    . Cot::$cfg['payments']['valuta'] ?? '';
 
 $L['affiliate_refpay_desc'] = 'Вознаграждение за нового реферала';
 $L['affiliate_refpay_mail_subject'] = 'Вознаграждение за нового реферала';

@@ -22,7 +22,8 @@ $L['affiliate_mail_newreferal_subject'] = 'New referral';
 $L['affiliate_mail_newreferal_body'] = "Congratulations, you have a new referral to login: %1\$s.";
 
 $L['affiliate_mail_newpayment_subject'] = 'Affiliate payout';
-$L['affiliate_mail_newpayment_body'] = 'Congratulations to your account payment on an affiliate program of: %1$s '.$cfg['payments']['valuta'];
+$L['affiliate_mail_newpayment_body'] = 'Congratulations to your account payment on an affiliate program of: %1$s '
+    . Cot::$cfg['payments']['valuta'] ?? '';
 
 $L['affiliate_refpay_desc'] = 'Payment for the invitation';
 $L['affiliate_refpay_mail_subject'] = 'Payment for the invitation';

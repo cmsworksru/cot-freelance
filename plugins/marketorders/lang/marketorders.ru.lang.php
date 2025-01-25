@@ -20,7 +20,7 @@ $L['cfg_tax'] = array('Комиссия за продажи (%)');
 $L['cfg_ordersperpage'] = array('Число заказов на странице');
 $L['cfg_adminid'] = array('ID пользователя для зачисления комиссии');
 $L['cfg_showneworderswithoutpayment'] = array('Показывать заказы ожидающие оплату');
-$L['cfg_acceptzerocostorders'] = array('Разрешать покупку товаров с ценой 0 '.((is_array($cfg) && is_array($cfg['payments'])) ? $cfg['payments']['valuta'] : ''));
+$L['cfg_acceptzerocostorders'] = array('Разрешать покупку товаров с ценой 0 '.((!empty(Cot::$cfg) && is_array(Cot::$cfg['payments'])) ? Cot::$cfg['payments']['valuta'] : ''));
 
 $L['marketorders'] = 'Заказы в магазине';
 
