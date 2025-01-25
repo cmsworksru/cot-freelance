@@ -1,7 +1,6 @@
 <!-- BEGIN: MAIN -->
-
 <div class="block">
-	<h5><i class="fa fa-plug"></i> Статистика регистраций пользователей</h5>
+	<h2><i class="fa fa-plug"></i> Статистика регистраций пользователей</h2>
 	
 	<script type="text/javascript" src="https://www.google.com/jsapi"></script>
     <script type="text/javascript">
@@ -27,7 +26,9 @@
         chart.draw(data, options);
       }
     </script>
-	<div id="chart_div" style="width: 95%; height: 400px;"></div>
+	<div class="wrapper">
+		<div id="chart_div" style="width: 100%; height: 400px;"></div>
+	</div>
 </div>
 
 <!-- END: MAIN -->
