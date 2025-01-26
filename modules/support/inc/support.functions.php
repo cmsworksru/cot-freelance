@@ -12,7 +12,7 @@
 
 defined('COT_CODE') or die('Wrong URL');
 
-require_once cot_langfile('support', 'plug');
+require_once cot_langfile('support', 'module');
 
 // Registering tables and fields
 cot::$db->registerTable('support_tickets');

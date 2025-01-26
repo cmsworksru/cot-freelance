@@ -323,13 +323,15 @@ function cot_generate_markettags($item_data, $tag_prefix = '', $textlength = 0, 
 		}
 
 		// Extrafields
-		if (isset($cot_extrafields[$db_market]))
-		{
-			foreach ($cot_extrafields[$db_market] as $exfld)
-			{
+		if (isset($cot_extrafields[$db_market])) {
+			foreach ($cot_extrafields[$db_market] as $exfld) {
 				$tag = mb_strtoupper($exfld['field_name']);
-				$temp_array[$tag . '_TITLE'] = isset($L['market_' . $exfld['field_name'] . '_title']) ? $L['market_' . $exfld['field_name'] . '_title'] : $exfld['field_description'];
-				$temp_array[$tag] = cot_build_extrafields_data('market', $exfld, $item_data['item_' . $exfld['field_name']]);
+				$temp_array[$tag . '_TITLE'] = $L['market_' . $exfld['field_name'] . '_title'] ?? $exfld['field_description'];
+				$temp_array[$tag] = cot_build_extrafields_data(
+                    'market',
+                    $exfld,
+                        $item_data['item_' . $exfld['field_name']] ?? null
+                );
 			}
 		}
 

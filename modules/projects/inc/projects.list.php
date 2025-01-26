@@ -217,9 +217,8 @@ if(!empty($c) && is_array($structure['projects'][$c]))
 }
 
 $sqllist_rowset = $sqllist->fetchAll();
-$sqllist_idset = array();
-foreach($sqllist_rowset as $item)
-{
+$sqllist_idset = [];
+foreach ($sqllist_rowset as $item) {
 	$sqllist_idset[$item['item_id']] = $item['item_alias'];
 }
 
@@ -227,8 +226,8 @@ foreach($sqllist_rowset as $item)
 $extp = cot_getextplugins('projects.list.loop');
 /* ===== */
 
-foreach($sqllist_rowset as $item)
-{
+$jj = 0;
+foreach($sqllist_rowset as $item) {
 	$jj++;
 	$t->assign(cot_generate_usertags($item, 'PRJ_ROW_OWNER_'));
 	$t->assign(cot_generate_projecttags($item, 'PRJ_ROW_', $cfg['projects']['shorttextlen'], $usr['isadmin'], $cfg['homebreadcrumb']));
@@ -237,8 +236,7 @@ foreach($sqllist_rowset as $item)
 	));
 
 	/* === Hook - Part2 : Include === */
-	foreach ($extp as $pl)
-	{
+	foreach ($extp as $pl) {
 		include $pl;
 	}
 	/* ===== */

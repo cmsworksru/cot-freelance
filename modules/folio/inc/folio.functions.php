@@ -126,32 +126,33 @@ function cot_build_structure_folio_tree($parent = '', $selected = '', $level = 0
 	}
 	/* ===== */
 
-	if (count($children) == 0)
-	{
+	if (count($children) == 0) {
 		return false;
 	}
 
-	$t1->assign(array(
-		"TITLE" => htmlspecialchars($structure['folio'][$parent]['title']),
-		"DESC" => $structure['folio'][$parent]['desc'],
-		"COUNT" => $structure['folio'][$parent]['count'],
-		"ICON" => $structure['folio'][$parent]['icon'],
-		"HREF" => cot_url("folio", $urlparams + array('c' => $parent)),
+	$t1->assign([
+		"TITLE" => !empty($parent) && isset($structure['folio'][$parent])
+            ? htmlspecialchars($structure['folio'][$parent]['title'])
+            : '',
+		"DESC" => !empty($parent) && isset($structure['folio'][$parent]) ? $structure['folio'][$parent]['desc'] : '',
+		"COUNT" => !empty($parent) && isset($structure['folio'][$parent]) ? $structure['folio'][$parent]['count'] : '',
+		"ICON" => !empty($parent) && isset($structure['folio'][$parent]) ? $structure['folio'][$parent]['icon'] : '',
+		"HREF" => !empty($parent) && isset($structure['folio'][$parent])
+            ? cot_url("folio", $urlparams + array('c' => $parent))
+            : '',
 		"LEVEL" => $level,
-	));
-
-	$jj = 0;
+	]);
 
 	/* === Hook - Part1 : Set === */
 	$extp = cot_getextplugins('folio.tree.loop');
 	/* ===== */
 
-	foreach ($children as $row)
-	{
+    $jj = 0;
+	foreach ($children as $row) {
 		$jj++;
 		$urlparams['c'] = $row;
-		$subcats = $structure['folio'][$row]['subcats'];
-		$t1->assign(array(
+		$subcats = !empty($structure['folio'][$row]['subcats']) ? $structure['folio'][$row]['subcats'] : [];
+		$t1->assign([
 			"ROW_TITLE" => htmlspecialchars($structure['folio'][$row]['title']),
 			"ROW_DESC" => $structure['folio'][$row]['desc'],
 			"ROW_COUNT" => $structure['folio'][$row]['count'],
@@ -161,12 +162,11 @@ function cot_build_structure_folio_tree($parent = '', $selected = '', $level = 0
 			"ROW_SUBCAT" => (count($subcats) > 0) ? cot_build_structure_folio_tree($row, $selected, $level + 1) : '',
 			"ROW_LEVEL" => $level,
 			"ROW_ODDEVEN" => cot_build_oddeven($jj),
-			"ROW_JJ" => $jj
-		));
+			"ROW_JJ" => $jj,
+		]);
 		
 		// Extra fields for structure
-		foreach ($cot_extrafields[$db_structure] as $exfld)
-		{
+		foreach ($cot_extrafields[$db_structure] as $exfld) {
 			$uname = strtoupper($exfld['field_name']);
 			$t1->assign(array(
 				'ROW_'.$uname.'_TITLE' => isset($L['structure_'.$exfld['field_name'].'_title']) ?  $L['structure_'.$exfld['field_name'].'_title'] : $exfld['field_description'],
@@ -709,8 +709,7 @@ function cot_getfoliolist($template = 'index', $count = 5, $sqlsearch = '',
  * @param type $name
  * @param type $subcat
  * @param type $hideprivate
- * @param type $is_module
- * @return type
+ * @return string
  */
 function cot_folio_selectcat($check, $name, $subcat = '', $hideprivate = true)
 {
@@ -729,14 +728,12 @@ function cot_folio_selectcat($check, $name, $subcat = '', $hideprivate = true)
 			$display = (mb_substr($x['path'], 0, $mtchlen) == $mtch || $i === $subcat);
 		}
 
-		if ((!$is_module || cot_auth('folio', $i, 'R')) && $i!='all' && $display)
-		{
+		if (cot_auth('folio', $i, 'R') && $i != 'all' && $display) {
 			$result_array[$i] = $x['tpath'];
 		}
 	}
-	$result = cot_selectbox($check, $name, array_keys($result_array), array_values($result_array), true);
 
-	return($result);
+    return cot_selectbox($check, $name, array_keys($result_array), array_values($result_array), true);
 }
 
 if (!empty(cot::$cfg['folio']['markup']) && cot::$cfg['folio']['markup'] == 1) {

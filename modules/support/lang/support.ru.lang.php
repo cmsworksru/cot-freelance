@@ -13,16 +13,21 @@
 defined('COT_CODE') or die('Wrong URL.');
 
 $L['plu_title'] = 'Техническая поддержка';
+
+$L['info_desc'] = 'Комментарии с API и интеграцией со страницами, списками, опросами, RSS и другими расширениями';
+
+
 $L['support'] = 'Техническая поддержка';
 
 $L['support_addtitle'] = 'Создание заявки';
+
 
 $L['support_tickets_add_button'] = 'Создать заявку';
 $L['support_tickets_close_button'] = 'Закрыть заявку';
 
 $L['support_tickets'] = 'Заявки на техподдержку';
 $L['support_tickets_number'] = 'Заявка';
-$L['support_tickets_open'] = 'Активные';
+$L['support_tickets_open'] = 'Открытые';
 $L['support_tickets_closed'] = 'Закрытые';
 
 $L['support_tickets_new'] = 'Новое обращение';
@@ -43,23 +48,23 @@ $L['support_tickets_wait_alert'] = 'Ваше обрашение отправле
 $L['support_tickets_closed_alert'] = 'Эта заявка уже исполнена. Если вам необходимо задать другой вопрос, то создайте пожалуйста новую заявку.';
 
 $L['support_notify_newticket_title'] = "Новая заявка #%1\$s";
-$L['support_notify_newticket_body'] = "Здравствуйте!\nПоступила новая заявка от пользователя %1\$s. Ссылка для просмотра:\n%2\$s";
+$L['support_notify_newticket_body'] = "Техподдержка! Новая заявка от %1\$s. Ссылка для просмотра:\n%2\$s";
 
 $L['support_notify_newmsg_admin_title'] = "Ответ по заявке #%1\$s";
 $L['support_notify_newmsg_admin_body'] = "Здравствуйте!\nВам поступил ответ по заявке #%1\$s. Ссылка для просмотра:\n%2\$s";
 $L['support_notify_newmsg_user_title'] = "Ответ по заявке #%1\$s";
 $L['support_notify_newmsg_user_body'] = "Здравствуйте, %1\$s!\nВам поступил ответ по заявке #%2\$s. Ссылка для просмотра:\n%3\$s";
 
-$L['support_newticket_title'] = 'Заголовок обращения';
+$L['support_newticket_title'] = 'Суть обращения, 1-2 слова';
 $L['support_newticket_name'] = 'Ваше имя';
 $L['support_newticket_email'] = 'E-mail';
 
-$L['support_error_rtickettitle'] = 'Не указан заголовок обращения';
+$L['support_error_rtickettitle'] = 'Не указана тема <br>';
 $L['support_error_rtickettitlelong'] = 'Слишком длинный заголовок обращения';
 $L['support_error_rticketname'] = 'Пожалуйста, укажите ваше имя';
 $L['support_error_rticketemail'] = 'Пожалуйста, укажите ваш email';
 
-$L['support_error_rmsgtext'] = 'Не указаны подробности обращения';
+$L['support_error_rmsgtext'] = 'Не указан вопрос полностью';
 
 $L['support_tickets_message_error_textempty'] = 'Не указан текст сообщения';
 $L['support_tickets_message_error_closed'] = 'Данное обращение уже закрыто. Чтобы задать новый вопрос, пожалуйста, создайте новое обращение.';

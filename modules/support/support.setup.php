@@ -5,10 +5,10 @@
  * Name=Support
  * Category=
  * Description=Техническая поддержка пользователей на основе тикетов
- * Version=1.0.3
- * Date=
- * Author=CMSWorks Team
- * Copyright=Copyright (c) CMSWorks.ru
+ * Version=2.0.5
+ * Date=2025-01-26
+ * Author=CMSWorks Team, Cotonti team
+ * Copyright=Copyright (c) CMSWorks.ru, Cotonti team
  * Notes=
  * Auth_guests=R
  * Lock_guests=12345A
@@ -16,6 +16,7 @@
  * Lock_members=12345
  * Requires_modules=users
  * Requires_plugins=
+ * Recommends_plugins=notify
  * [END_COT_EXT]
  * 
  * [BEGIN_COT_EXT_CONFIG]

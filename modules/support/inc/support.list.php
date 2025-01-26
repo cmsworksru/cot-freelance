@@ -17,7 +17,7 @@ $status = cot_import('status', 'G', 'ALP');
 
 if(empty($status)) $status = 'open';
 
-list($usr['auth_read'], $usr['auth_write'], $usr['isadmin']) = cot_auth('plug', 'support');
+list($usr['auth_read'], $usr['auth_write'], $usr['isadmin']) = cot_auth('support', 'any');
 
 list($pn, $d, $d_url) = cot_import_pagenav('d', $cfg['maxrowsperpage']);
 
@@ -31,7 +31,7 @@ foreach (cot_getextplugins('support.list.first') as $pl)
 $out['subtitle'] = $L['support'];
 $out['head'] .= $R['code_noindex'];
 
-$mskin = cot_tplfile(array('support', 'list'), 'plug');
+$mskin = cot_tplfile(array('support', 'list'), 'module');
 
 /* === Hook === */
 foreach (cot_getextplugins('support.list.main') as $pl)
@@ -98,8 +98,8 @@ $t->assign(array(
 $extp = cot_getextplugins('support.list.loop');
 /* ===== */
 
-foreach ($sqllist_rowset as $ticket)
-{
+$jj = 0;
+foreach ($sqllist_rowset as $ticket) {
 	$jj++;
 	$t->assign(cot_generate_usertags($ticket, 'TICKET_ROW_USER_'));
 

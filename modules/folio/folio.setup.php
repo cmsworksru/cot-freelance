@@ -6,7 +6,7 @@
  * Description=Портфолио
  * Version=2.6.3
  * Date=2025-01-02
- * Author=CMSWorks Team
+ * Author=CMSWorks Team, Cotonti team
  * Copyright=Copyright &copy; CMSWorks.ru, littledev.ru, Cotonti Team
  * Notes=
  * Auth_guests=R
@@ -48,7 +48,7 @@
  * Folio module
  *
  * @package folio
- * @author CMSWorks Team
+ * @author CMSWorks Team, Cotonti team
  * @copyright Copyright (c) CMSWorks.ru, littledev.ru, Cotonti Team
  * @license BSD
  */
