@@ -1,16 +1,14 @@
 <?php
-
 /* ====================
-  [BEGIN_COT_EXT]
-  Hooks=admin.config.edit.loop
-  [END_COT_EXT]
-  ==================== */
+[BEGIN_COT_EXT]
+Hooks=admin.config.edit.loop
+[END_COT_EXT]
+==================== */
 
 /**
  * news admin usability modification
  *
  * @package news
- * @version 0.7.0
  * @author Cotonti Team
  * @copyright Copyright (c) Cotonti Team 2008-2012
  * @license BSD
@@ -18,7 +16,6 @@
 defined('COT_CODE') or die('Wrong URL');
 
 require_once cot_incfile('page', 'module');
-$adminHelp = $L['news_help'];
 
 if ($p == 'mavatars' && $row['config_name'] == 'set' && $cfg['jquery'])
 {

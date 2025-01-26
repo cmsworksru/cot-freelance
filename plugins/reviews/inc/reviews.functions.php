@@ -154,10 +154,11 @@ function cot_reviews_list($userid, $area, $code='', $name='', $params='', $tail=
 		{
 			require_once cot_incfile('projects', 'module');
 			global $db_projects_offers, $db_projects;
-			
-			$prj_reviews_sql = $db->query("SELECT item_code FROM $db_reviews WHERE item_area='projects' AND item_userid=".$usr['id']);
-			while($row = $prj_reviews_sql->fetch())
-			{
+
+            $prjreviews = [];
+
+			$prj_reviews_sql = $db->query("SELECT item_code FROM $db_reviews WHERE item_area='projects' AND item_userid=" . $usr['id']);
+			while($row = $prj_reviews_sql->fetch()) {
 				$prjreviews[] = $row['item_code'];
 			}
 			

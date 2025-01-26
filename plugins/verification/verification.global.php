@@ -23,7 +23,16 @@ require_once cot_incfile('verification', 'plug', 'resources');
 list($auth_read, $auth_write, $auth_admin) = cot_auth('plug', 'verification');
 
 $glb_vrf_link = cot_rc('vrf_link',array('url' => cot_url('plug', 'e=verification'),'txt' => $L['ver_vrf_txt'], 'title' => $L['ver_vrf_txt_title']));
-$glb_vrf_link_user = (!$usr['profile']['user_verification_status']) ?  $glb_vrf_link : '';
-$glb_vrf_link_admin = ($cfg['verification_plug']['verification_count'] > 0 && $auth_admin) ?  cot_rc('vrf_link',array('url' => cot_url('admin', 'm=other&p=verification'),'txt' => $L['ver_tools_add_scan'].$cfg['verification_plug']['verification_count'], 'title' => $L['ver_tools_add_scan'])):'';
+$glb_vrf_link_user = (Cot::$usr['id'] > 0 && !Cot::$usr['profile']['user_verification_status']) ?  $glb_vrf_link : '';
+$glb_vrf_link_admin = (Cot::$cfg['verification_plug']['verification_count'] > 0 && $auth_admin)
+    ? cot_rc(
+        'vrf_link',
+        [
+            'url' => cot_url('admin', 'm=other&p=verification'),
+            'txt' => $L['ver_tools_add_scan'] . Cot::$cfg['verification_plug']['verification_count'],
+            'title' => $L['ver_tools_add_scan'],
+        ]
+    )
+    : '';
 
 
