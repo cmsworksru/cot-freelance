@@ -1,7 +1,10 @@
 
 $(document).on('ready ajaxSuccess', function() {
- $('.jqmWindowVerification').jqm({ trigger: 'a.trigger_jgm_vrf'});
-  });
+	if ($.fn.jqm === undefined) {
+		return;
+	}
+	$('.jqmWindowVerification').jqm({ trigger: 'a.trigger_jgm_vrf'});
+});
 
 function vrf_win_jqm(url) {
   $('.jqmWindowVerification').jqm({ajax: 'index.php?r=verification&action=image&imgurl='+url});
