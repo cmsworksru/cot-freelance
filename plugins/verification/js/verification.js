@@ -22,14 +22,15 @@ function  printing_machine(text,id, speed )
 }
 
 window.onload = function() {
-
-		var ch = document.getElementById('confirm');
-		document.getElementById('linkverifi').onclick = function () {
-			if(!ch.checked){
-						printing_machine(text_vf_error, 'errors_confirm' , 20);
-						return false;
-			}
-
-		};
-
+	const verifyLink = document.getElementById('linkverifi');
+	if (verifyLink === null) {
+		return;
+	}
+	var ch = document.getElementById('confirm');
+	verifyLink.onclick = function () {
+		if (!ch.checked){
+			printing_machine(text_vf_error, 'errors_confirm' , 20);
+			return false;
+		}
+	};
 };
