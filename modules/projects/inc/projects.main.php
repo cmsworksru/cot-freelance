@@ -21,20 +21,17 @@ $c = cot_import('c', 'G', 'TXT');
 $r = cot_import('r', 'G', 'ALP');
 
 /* === Hook === */
-foreach (cot_getextplugins('projects.first') as $pl)
-{
+foreach (cot_getextplugins('projects.first') as $pl) {
 	include $pl;
 }
 /* ===== */
 
-if ($id > 0 || !empty($al))
-{
+if ($id > 0 || !empty($al)) {
 	$where = (!empty($al)) ? "item_alias='".$al."'" : 'item_id='.$id;
 	$sql = $db->query("SELECT p.*, u.* FROM $db_projects AS p LEFT JOIN $db_users AS u ON u.user_id=p.item_userid WHERE $where LIMIT 1");
 }
 
-if (!$id && empty($al) || !$sql || $sql->rowCount() == 0)
-{
+if (!$id && empty($al) || !$sql || $sql->rowCount() == 0) {
 	cot_die_message(404, TRUE);
 }
 $item = $sql->fetch();
@@ -46,30 +43,31 @@ $id = $item['item_id'];
 
 $title_params = array(
 	'TITLE' => empty($item['item_metatitle']) ? $item['item_title'] : $item['item_metatitle'],
-	'TYPE' => $projects_types[$item['item_type']],
-	'CATEGORY' => $structure['projects'][$item['item_cat']]['title'],
+	'TYPE' => $projects_types[$item['item_type']] ?? '',
+	'CATEGORY' => Cot::$structure['projects'][$item['item_cat']]['title'],
 );
-$out['subtitle'] = cot_title($cfg['projects']['title_projects'], $title_params);
+Cot::$out['subtitle'] = cot_title(Cot::$cfg['projects']['title_projects'], $title_params);
 
-$out['desc'] = (!empty($item['item_metadesc'])) ? $item['item_metadesc'] : cot_cutstring(strip_tags(cot_parse($item['item_text'], $cfg['projects']['markup'], $item['item_parser'])), 160);
-$out['meta_keywords'] = (!empty($item['item_keywords'])) ? $item['item_keywords'] : $structure['projects'][$item['item_cat']]['keywords'];
+Cot::$out['desc'] = (!empty($item['item_metadesc']))
+    ? $item['item_metadesc']
+    : cot_cutstring(strip_tags(cot_parse($item['item_text'], Cot::$cfg['projects']['markup'], $item['item_parser'])), 160);
+Cot::$out['meta_keywords'] = !empty($item['item_keywords'])
+    ? $item['item_keywords']
+    : Cot::$structure['projects'][$item['item_cat']]['keywords'] ?? '';
 
-if ($item['item_state'] != 0 && !$usr['isadmin'] && $usr['id'] != $item['item_userid'])
-{
-	$userofferexists = (bool)$db->query("SELECT COUNT(*) FROM $db_projects_offers 
+if ($item['item_state'] != 0 && !$usr['isadmin'] && $usr['id'] != $item['item_userid']) {
+	$userofferexists = (bool) Cot::$db->query("SELECT COUNT(*) FROM $db_projects_offers 
 			WHERE offer_userid=" . $usr['id'] . " AND offer_pid=" . $item['item_id'])->fetchColumn();
-	if(!$userofferexists)
-	{
+	if (!$userofferexists) {
 		cot_log("Attempt to directly access an un-validated", 'sec');
 		cot_redirect(cot_url('message', "msg=930", '', true));
 		exit;
 	}
 }
 
-if ($usr['id'] != $item['item_userid'] && (!$usr['isadmin'] || $cfg['projects']['count_admin']))
-{
+if (Cot::$usr['id'] != $item['item_userid'] && (!Cot::$usr['isadmin'] || Cot::$cfg['projects']['count_admin'])) {
 	$item['item_count']++;
-	$db->update($db_projects, array('item_count' => $item['item_count']), "item_id=" . (int)$item['item_id']);
+	$db->update($db_projects, array('item_count' => $item['item_count']), "item_id=" . (int) $item['item_id']);
 }
 
 // Building the canonical URL

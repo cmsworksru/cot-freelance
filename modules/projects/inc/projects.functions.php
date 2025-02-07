@@ -244,23 +244,27 @@ function cot_generate_projecttags($item_data, $tag_prefix = '', $textlength = 0,
 	}
 
 	/* === Hook === */
-	foreach ($extp_first as $pl) {
+	foreach ($extp_first as $pl)
+	{
 		include $pl;
 	}
 	/* ===== */
 	
-	if (!is_array($item_data)) {
+	if (!is_array($item_data))
+	{
 		$sql = $db->query("SELECT * FROM $db_projects WHERE item_id = '" . (int)$item_data . "' LIMIT 1");
 		$item_data = $sql->fetch();
 	}
 
-	if (!empty($item_data) && $item_data['item_id'] > 0 && !empty($item_data['item_title'])) {
-		if (is_null($admin_rights)) {
+	if ($item_data['item_id'] > 0 && !empty($item_data['item_title']))
+	{
+		if (is_null($admin_rights))
+		{
 			$admin_rights = cot_auth('projects', $item_data['item_cat'], 'A');
 		}
 
 		$item_data['item_pageurl'] = (empty($item_data['item_alias'])) ? 
-		cot_url('projects', 'c='.$item_data['item_cat'].'&id='.$item_data['item_id']) : cot_url('projects', 'c='.$item_data['item_cat'].'&al='.$item_data['item_alias']);
+			cot_url('projects', 'c='.$item_data['item_cat'].'&id='.$item_data['item_id']) : cot_url('projects', 'c='.$item_data['item_cat'].'&al='.$item_data['item_alias']);
 
 		$catpatharray[] = array(cot_url('projects'), $L['projects']);
 		$itempatharray[] = array($item_data['item_pageurl'], $item_data['item_title']);

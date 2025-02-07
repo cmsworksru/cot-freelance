@@ -1,5 +1,4 @@
 <?php
-
 /**
  * [BEGIN_COT_EXT]
  * Hooks=index.tags
@@ -7,12 +6,11 @@
  */
 
 /**
- * projects module
+ * Projects module
  *
  * @package projects
- * @version 2.5.2
- * @author CMSWorks Team
- * @copyright Copyright (c) CMSWorks.ru, littledev.ru
+ * @author CMSWorks Team, Cotonti team
+ * @copyright Copyright (c) CMSWorks.ru, littledev.ru, Cotonti team
  * @license BSD
  */
 
@@ -118,8 +116,7 @@ $t_pr->assign(array(
 
 $sqllist_rowset = $sqllist->fetchAll();
 $sqllist_idset = array();
-foreach($sqllist_rowset as $item)
-{
+foreach($sqllist_rowset as $item) {
 	$sqllist_idset[$item['item_id']] = $item['item_alias'];
 }
 
