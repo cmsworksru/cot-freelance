@@ -21,7 +21,7 @@ Recommends_plugins=sbr,reviews,marketorders,orderservices
 
 [BEGIN_COT_EXT_CONFIG]
 perPage=01:select:0,1,2,3,4,5,10,15,20,25,30,35,40,45,50:20:Число событий на странице
-globalOn=03:radio::1:
+globalOn=03:radio::0:
 header_count=05:select:5,10,15,20:10:Число уведомлений в шапке
 [END_COT_EXT_CONFIG]
 ==================== */
