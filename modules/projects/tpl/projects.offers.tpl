@@ -52,8 +52,8 @@
 					<!-- IF {OFFER_ROW_CHOISE} != "performer" AND {PERFORMER_USERID} == "" -->
 					<a href="{OFFER_ROW_SETPERFORMER}" class="btn btn-success btn-block">{PHP.L.offers_ispolnitel}</a> 
 					<!-- ENDIF -->
-					<!-- IF {OFFER_ROW_CHOISE} != "refuse" AND {PHP.cot_plugins_active.sbr} -->
-					<a href="{OFFER_ROW_SBRCREATELINK}" class="btn btn-primary btn-block">{PHP.L.sbr_createlink}</a> 
+					<!-- IF {OFFER_ROW_CHOISE} != "refuse" AND {PHP|cot_plugin_active('sbr')} -->
+					<a href="{OFFER_ROW_SBRCREATELINK}" class="btn btn-primary btn-block">{PHP.L.sbr_createlink}</a>
 					<!-- ENDIF -->
 				</div>
 			</div>

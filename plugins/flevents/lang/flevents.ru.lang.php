@@ -1,10 +1,19 @@
 <?php
-
+/**
+ * Events for freelance
+ * @package flevents
+ * @author Cotonti team
+ * @copyright (c) Cotonti team
+ */
 
 defined('COT_CODE') or die('Wrong URL');
 
-$L['info_name'] = 'Новые события';
-$L['info_desc'] = 'Информирование о новых событиях';
+$L['flevents_title'] = 'Новые события';
+$L['flevents_description'] = 'Информирование о новых событиях';
+
+$L['cfg_globalOn'] = 'Включить глобально';
+$L['cfg_globalOn_hint'] = 'Информация о количестве уведомлений будет доступна через '
+    . '<code>Cot::$usr[\'flevents\'][\'xxx\']</code> или <code>{PHP.usr.flevents.xxx}</code> в шаблонах';
 
 $L['Events_title'] = 'События';
 $L['Events_title_new'] = 'Новые события';

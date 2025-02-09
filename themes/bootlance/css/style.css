@@ -290,3 +290,13 @@ ol					{ margin-left:20px; list-style-type:decimal; }
     filter: alpha(opacity=0);
     font-size: 50px;
 }
+
+/* FlEvents
+---------------------------------------------------- */
+li#notifications-menu > ul.dropdown-menu {
+    min-width: 500px;
+}
+li#notifications-menu > ul.dropdown-menu li li a {
+    display: inline;
+    padding: 0;
+}

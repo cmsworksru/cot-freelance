@@ -453,7 +453,7 @@ while ($offer = $sql->fetch())
 
 		$t_o->assign(array(
 			"ADDPOST_ACTION_URL" => cot_url('projects', 'id=' . $id . '&oid=' . $offer['offer_id'] . '&a=addpost'),
-			"ADDPOST_TEXT" => cot_textarea('posttext',  $offer_post['post_text'], 3, 60),
+			"ADDPOST_TEXT" => cot_textarea('posttext',  $offer_post['post_text'] ?? '', 3, 60),
 			"ADDPOST_OFFERID" => $offer['offer_id'],
 		));
 		$t_o->parse("MAIN.ROWS.POSTS.POSTFORM");

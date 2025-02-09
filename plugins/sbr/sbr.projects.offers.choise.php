@@ -1,18 +1,16 @@
 <?php
-
-/**
- * [BEGIN_COT_EXT]
- * Hooks=projects.offers.choise
- * [END_COT_EXT]
- */
+/* ====================
+[BEGIN_COT_EXT]
+Hooks=projects.offers.choise
+[END_COT_EXT]
+==================== */
 
 /**
  * Sbr plugin
  *
  * @package sbr
- * @version 1.0.3
- * @author CMSWorks Team
- * @copyright Copyright (c) CMSWorks.ru
+ * @author CMSWorks Team, Cotonti team
+ * @copyright Copyright (c) CMSWorks.ru, Cotonti team
  * @license BSD
  */
 
@@ -22,11 +20,11 @@ require_once cot_incfile('sbr', 'plug');
 require_once cot_incfile('projects', 'module');
 require_once cot_incfile('payments', 'module');
 
-if($offers['item_choise'] != 'refuse')
-{
-	$t_o->assign(array(
-		"OFFER_ROW_SBRCREATELINK" => cot_url('sbr', 'm=add&pid=' . $id . '&uid=' . $offer['offer_userid'] . '&' . cot_xg()),
-	));
+if ($offer['offer_choise'] != 'refuse') {
+	$t_o->assign([
+		"OFFER_ROW_SBRCREATELINK" => cot_url(
+            'sbr',
+            'm=add&pid=' . $id . '&uid=' . $offer['offer_userid'] . '&' . cot_xg()
+        ),
+	]);
 }
-
-?>

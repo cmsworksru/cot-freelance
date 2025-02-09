@@ -18,7 +18,7 @@ function insert_not($noti_data)
     $db->insert($db_flevents, $noti_data);
 }
 
-function flevents_show($template = '', $count = '')
+function flevents_show($template = '', $count = null)
 {
     global $db, $db_flevents, $usr;
 
@@ -36,6 +36,8 @@ function flevents_show($template = '', $count = '')
         Cot::$usr['id']
     );
 
+    $t = new XTemplate(cot_tplfile(['flevents', $template], 'plug'));
+
     if (empty($count)) {
         $totalitems = Cot::$db->query(
             'SELECT COUNT(*) FROM ' . Cot::$db->flevents . ' WHERE ev_status = 1 AND ev_touid = ?',
@@ -51,8 +53,6 @@ function flevents_show($template = '', $count = '')
             Cot::$usr['id']
         )->fetchColumn();
     }
-
-    $t = new XTemplate(cot_tplfile(['flevents', $template], 'plug'));
 
     $t->assign([
         "EVENTS_COUNT" => $totalitems,

@@ -38,7 +38,7 @@
 				<li<!-- IF {PHP.tab} == 'reviews' --> class="active"<!-- ENDIF -->><a href="{USERS_DETAILS_REVIEWS_URL}#tab_reviews" data-toggle="tab">{PHP.L.reviews_reviews} {USERS_DETAILS_REVIEWS_COUNT}</a></li>
 				<!-- ENDIF -->
 				<!-- IF {PHP.cot_plugins_enabled.sbr} -->
-				<li><a href="{USERS_DETAILS_ID|cot_url('sbr', 'm=add&uid='$this)}">Предложить сделку</a></li>
+				<li><a href="{USERS_DETAILS_ID|cot_url('sbr', 'm=add&uid=$this')}">{PHP.L.sbr_createlink}</a></li>
 				<!-- ENDIF -->
 			</ul>
 		</div>

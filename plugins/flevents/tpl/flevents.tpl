@@ -7,9 +7,9 @@
 <!-- IF {EVENTS_COUNT} != 0 -->
     <div class="well">
         <!-- BEGIN: EV_ROWS -->
-        <div class="media padding10 {EV_ROW_STYLER}">
+        <div class="media {EV_ROW_STYLER}">
             <div class="row">
-                <div class="col-md-10 text">
+                <div class="col-md-10 span10 text">
                 <!-- IF {EV_ROW_AREA} == 'offers' -->
                     <!-- IF {EV_ROW_TYPE} == 'addoffer' -->
                        {PHP.L.User} {EV_ROW_USER_NAME} {PHP.L.Events_addoffer}:
@@ -90,7 +90,7 @@
     </div>
 
     <!-- IF {PAGINATION} -->
-    <div><ul class="pagination {PHP.R.admin-pagination-list-class}">{PREVIOUS_PAGE}{PAGINATION}{NEXT_PAGE}</ul></div>
+    <div class="pagination"><ul class="{PHP.R.admin-pagination-list-class}">{PREVIOUS_PAGE}{PAGINATION}{NEXT_PAGE}</ul></div>
     <!-- ENDIF -->
 
 <!-- ELSE -->

@@ -455,29 +455,27 @@ function cot_projects_import($source = 'POST', $ritem = array(), $auth = array()
 	$ritem['item_type'] = cot_import('rtype', $source, 'INT');
 	$ritem['item_parser'] = cot_import('rparser', $source, 'ALP');
 	
-	if(empty($ritem['item_date']))
-	{
-		$ritem['item_date'] = (int)$sys['now'];
-	}
-	else
-	{
-		$ritem['item_update'] = (int)$sys['now'];
+	if (empty($ritem['item_date'])) {
+		$ritem['item_date'] = (int) Cot::$sys['now'];
+	} else {
+		$ritem['item_update'] = (int) Cot::$sys['now'];
 	}
 	
-	if ($auth['isadmin'] && isset($ritem['item_userid']))
-	{
-		$ritem['item_count']     = cot_import('rcount', $source, 'INT');
-		$ritem['item_userid']   = $ritem['item_userid'];
-	}
-	else
-	{
+	if ($auth['isadmin'] && isset($ritem['item_userid'])) {
+		$ritem['item_count'] = cot_import('rcount', $source, 'INT');
+		$ritem['item_userid'] = (int) $ritem['item_userid'];
+	} else {
 		$ritem['item_userid'] = $usr['id'];
 	}
 	
 	// Extra fields
-	foreach ($cot_extrafields[$db_projects] as $exfld)
-	{
-		$ritem['item_'.$exfld['field_name']] = cot_import_extrafields('ritem'.$exfld['field_name'], $exfld, $source, $ritem['item_'.$exfld['field_name']]);
+	foreach ($cot_extrafields[$db_projects] as $exfld) {
+		$ritem['item_' . $exfld['field_name']] = cot_import_extrafields(
+            'ritem' . $exfld['field_name'],
+            $exfld,
+            $source,
+            $ritem['item_' . $exfld['field_name']] ?? null
+        );
 	}
 	
 	return $ritem;
