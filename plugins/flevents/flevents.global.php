@@ -59,7 +59,3 @@ foreach ($eventsData as $event) {
     $result[$event['ev_area']]['all'] += $event['count'];
     $result[$event['ev_area']][$event['ev_type']] += $event['count'];
 }
-echo '<pre>';
-var_dump($result);
-echo '</pre>';
-//die;
