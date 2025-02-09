@@ -18,7 +18,7 @@ function cot_setuserpoints($points, $type, $userid, $itemid = 0)
 {
 	global $db, $cfg, $sys, $db_userpoints, $db_users;
 	
-	if ($urr = $db->query("SELECT * FROM $db_users WHERE user_id=" . (int)$userid)->fetch())
+	if ($urr = $db->query("SELECT * FROM $db_users WHERE user_id=" . (int) $userid)->fetch())
 	{
 		if(preg_match("/([\d\.]{1,}\%)/", $points, $pt))
 		{

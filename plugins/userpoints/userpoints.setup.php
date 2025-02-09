@@ -4,7 +4,7 @@
  * Code=userpoints
  * Name=UserPoints
  * Description=Система рейтингов пользователей
- * Version=2.1.2
+ * Version=3.0.1
  * Date=2025-01-20
  * Author=CMSWorks Team, Cotonti team
  * Copyright=Copyright (c) CMSWorks.ru, littledev.ru, Cotonti team
