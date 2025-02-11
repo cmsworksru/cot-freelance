@@ -46,13 +46,13 @@
 				<td>{PHP.L.projects_price}:</td>
 				<td><div class="input-append">{PRJEDIT_FORM_COST}<span class="add-on">{PHP.cfg.payments.valuta}</span></div></td>
 			</tr>
-			<!-- IF {PHP.cot_plugins_active.mavatars} -->
+			<!-- IF {PHP|cot_plugin_active('mavatars')} -->
 			<tr>
 				<td>{PHP.L.Files}:</td>
 				<td>{PRJEDIT_FORM_MAVATAR}</td>
 			</tr>
 			<!-- ENDIF -->
-			<!-- IF {PHP.cot_plugins_active.paypro} -->
+			<!-- IF {PHP|cot_plugin_active('paypro')} -->
 			<tr>
 				<td>{PHP.L.paypro_forpro}:</td>
 				<td>

@@ -52,7 +52,7 @@ Copyright 2016 CMSWorks Team, 2024-2025 Cotonti team
 В шапку сайта можно добавить ссылку на сделки (этот код уже вставлен в базовую версию фриланс-биржи, здесь показан для примера):
 
 ```
-<!-- IF {PHP.cot_plugins_active.sbr} -->
+<!-- IF {PHP|cot_plugin_active('sbr')} -->
       <li><a href="{PHP|cot_url('sbr')}">{PHP.L.sbr_mydeals}</a></li>
 <!-- ENDIF -->
 ```

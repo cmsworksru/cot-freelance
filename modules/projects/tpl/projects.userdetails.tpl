@@ -26,8 +26,8 @@
 			<a href="{PRJ_ROW_URL}">{PRJ_ROW_SHORTTITLE}</a> <!-- IF {PRJ_ROW_USER_IS_ADMIN} --> <span class="label label-info">{PRJ_ROW_LOCALSTATUS}</span><!-- ENDIF -->
 		</h4>
 		<div class="pull-right textright">
-			<!-- IF {PHP.cot_plugins_active.payprjtop} AND {PHP.usr.id} == {PHP.urr.user_id} --><li>{PRJ_ROW_PAYTOP}</li><!-- ENDIF -->
-			<!-- IF {PHP.cot_plugins_active.payprjbold} AND {PHP.usr.id} == {PHP.urr.user_id} --><li>{PRJ_ROW_PAYBOLD}</li><!-- ENDIF -->
+			<!-- IF {PHP|cot_plugin_active('payprjtop')} AND {PHP.usr.id} == {PHP.urr.user_id} --><li>{PRJ_ROW_PAYTOP}</li><!-- ENDIF -->
+			<!-- IF {PHP|cot_plugin_active('payprjbold')} AND {PHP.usr.id} == {PHP.urr.user_id} --><li>{PRJ_ROW_PAYBOLD}</li><!-- ENDIF -->
 		</div>	
 		<p class="owner small"><span class="date">[{PRJ_ROW_DATE}]</span>   <span class="region">{PRJ_ROW_COUNTRY} {PRJ_ROW_REGION} {PRJ_ROW_CITY}</span>   {PRJ_ROW_EDIT_URL}</p>
 		<p class="text">{PRJ_ROW_SHORTTEXT}</p>

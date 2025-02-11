@@ -26,7 +26,7 @@
 	<div class="span8">	
 		{PRJ_TEXT}
 		
-		<!-- IF {PHP.cot_plugins_active.mavatars} -->
+		<!-- IF {PHP|cot_plugin_active('mavatars')} -->
 			<!-- IF {PRJ_MAVATARCOUNT} -->
 				<div style="clear:both;"></div>
 				<h5>{PHP.L.Files}:</h5>

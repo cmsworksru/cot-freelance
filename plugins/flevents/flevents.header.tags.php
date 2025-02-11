@@ -17,6 +17,7 @@ Tags=header.tpl:{HEADER_FL_EVENTS}
 
 defined('COT_CODE') or die('Wrong URL');
 
-$event = flevents_show('header', Cot::$cfg['plugin']['flevents']['header_count']);
-
-$t->assign('HEADER_FL_EVENTS', $event);
+if ($t->hasTag('HEADER_FL_EVENTS')) {
+    $event = flevents_show('header', Cot::$cfg['plugin']['flevents']['header_count']);
+    $t->assign('HEADER_FL_EVENTS', $event);
+}

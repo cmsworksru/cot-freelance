@@ -86,7 +86,7 @@
 				<!-- ENDIF -->
 			</p>
 			<p class="text">
-				<!-- IF {PHP.cot_plugins_active.mavatars} -->
+				<!-- IF {PHP|cot_plugin_active('mavatars')} -->
 					<!-- IF {OFFER_ROW_MAVATARCOUNT} -->
 						<h5>{PHP.L.Files}:</h5>
 						<ol class="files">
@@ -155,7 +155,7 @@
 				<td align="right" class="top">{PHP.L.offers_text_predl}:</td>
 				<td>{OFFER_FORM_TEXT}</td>
 			</tr>
-			<!-- IF {PHP.cot_plugins_active.mavatars} -->
+			<!-- IF {PHP|cot_plugin_active('mavatars')} -->
 			<tr>
 				<td align="right" class="top">{PHP.L.Files}:</td>
 				<td>{OFFER_FORM_MAVATAR}</td>
