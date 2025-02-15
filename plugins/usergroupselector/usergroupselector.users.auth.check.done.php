@@ -1,10 +1,10 @@
 <?php
-
 /**
  * [BEGIN_COT_EXT]
  * Hooks=users.auth.check.done
  * [END_COT_EXT]
  */
+
 /**
  * plugin User Group Selector for Cotonti Siena
  * 
@@ -13,23 +13,28 @@
  * @author CMSWorks Team
  * @copyright Copyright (c) CMSWorks.ru, littledev.ru
  * @license BSD
- *  */
+ *
+ * @var array $row User data
+ */
 defined('COT_CODE') or die('Wrong URL.');
 
-if(!empty($cfg['plugin']['usergroupselector']['groups']))
-{
+if (!empty($cfg['plugin']['usergroupselector']['groups'])) {
 	$groupstoselect = explode(',', $cfg['plugin']['usergroupselector']['groups']);
-	$urr = $db->query("SELECT * FROM $db_users WHERE user_id=".$ruserid)->fetch();
 
-	if($urr['user_usergroup'] != $urr['user_maingrp'] 
-		&& !empty($urr['user_usergroup']) 
-		&& $urr['user_usergroup'] != COT_GROUP_SUPERADMINS
-		&& $urr['user_usergroup'] != COT_GROUP_MODERATORS
-		&& in_array($urr['user_usergroup'], $groupstoselect)
-		&& $urr['user_maingrp'] != COT_GROUP_SUPERADMINS
-		&& $urr['user_maingrp'] != COT_GROUP_MODERATORS)
-	{
-		$db->update($db_users, array('user_maingrp' => $urr['user_usergroup']), "user_id=".$urr['user_id']);
-		$db->update($db_groups_users, array('gru_groupid' => $urr['user_usergroup']), "gru_userid=".$urr['user_id']." AND gru_groupid=".$urr['user_maingrp']);
+	if (
+        $row['user_usergroup'] != $row['user_maingrp']
+		&& !empty($row['user_usergroup'])
+		&& $row['user_usergroup'] != COT_GROUP_SUPERADMINS
+		&& $row['user_usergroup'] != COT_GROUP_MODERATORS
+		&& in_array($row['user_usergroup'], $groupstoselect)
+		&& $row['user_maingrp'] != COT_GROUP_SUPERADMINS
+		&& $row['user_maingrp'] != COT_GROUP_MODERATORS
+    ) {
+		Cot::$db->update(Cot::$db->users, ['user_maingrp' => $row['user_usergroup']], 'user_id = ' . $row['user_id']);
+        Cot::$db->update(
+            Cot::$db->groups_users,
+            ['gru_groupid' => $row['user_usergroup']],
+            "gru_userid = {$row['user_id']} AND gru_groupid = {$row['user_maingrp']}"
+        );
 	}	
 }

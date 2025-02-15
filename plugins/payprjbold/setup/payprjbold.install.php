@@ -3,11 +3,12 @@
  * Installation handler
  *
  * @package payprjbold
- * @version 1.0.0
- * @author CMSWorks Team
- * @copyright Copyright (c) CMSWorks.ru, littledev.ru
+ * @author CMSWorks Team, Cotonti team
+ * @copyright Copyright (c) CMSWorks.ru, littledev.ru, Cotonti team
  * @license BSD
  */
+
+declare(strict_types=1);
 
 defined('COT_CODE') or die('Wrong URL');
 
@@ -15,10 +16,11 @@ require_once cot_incfile('projects', 'module');
 
 global $db_projects;
 
-// Add field if missing
-if (!$db->fieldExists($db_projects, "item_bold"))
-{
-	$dbres = $db->query("ALTER TABLE `$db_projects` ADD COLUMN `item_bold` int(10) NOT NULL");
+if (empty($db_projects)) {
+    Cot::$db->registerTable('projects');
 }
 
-?>
+// Add field if missing @todo миграцию
+if (!Cot::$db->fieldExists($db_projects, 'item_bold')) {
+	Cot::$db->query("ALTER TABLE $db_projects ADD COLUMN item_bold INT NOT NULL DEFAULT 0");
+}

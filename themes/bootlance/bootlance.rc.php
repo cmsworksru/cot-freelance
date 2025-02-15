@@ -11,15 +11,12 @@
 
 defined('COT_CODE') or die('Wrong URL.');
 
+Resources::addFile(Cot::$cfg['themes_dir'] . '/' . Cot::$usr['theme'] . '/bootstrap/css/bootstrap.min.css');
+Resources::addFile(Cot::$cfg['themes_dir'] . '/' . Cot::$usr['theme'] . '/bootstrap/css/bootstrap-responsive.css');
 
-cot_rc_add_file($cfg['themes_dir'].'/'.$usr['theme'].'/bootstrap/css/bootstrap.min.css');
-cot_rc_add_file($cfg['themes_dir'].'/'.$usr['theme'].'/bootstrap/css/bootstrap-responsive.css');
+Resources::addFile(Cot::$cfg['themes_dir'] . '/' . Cot::$usr['theme'] . '/css/modalbox.css');
+Resources::addFile(Cot::$cfg['themes_dir'] . '/' . Cot::$usr['theme'] . '/css/style.css');
 
-cot_rc_add_file($cfg['themes_dir'].'/'.$usr['theme'].'/css/modalbox.css');
-cot_rc_add_file($cfg['themes_dir'].'/'.$usr['theme'].'/css/style.css');
+Resources::addFile(Cot::$cfg['themes_dir'] . '/' . Cot::$usr['theme'] . '/js/js.js');
 
-cot_rc_add_file($cfg['themes_dir'].'/'.$usr['theme'].'/js/js.js');
-
-require_once cot_rc($cfg['themes_dir'].'/'.$usr['theme'].'/'.$usr['theme'].'.resources.php');
-
-?>
+require_once Cot::$cfg['themes_dir'] . '/' . Cot::$usr['theme'] . '/' . Cot::$usr['theme'] . '.resources.php';

@@ -44,6 +44,6 @@ function cot_install_step3_setup()
 {
 	global $file;
 	$config_contents = file_get_contents($file['config']);
-	cot_install_config_replace($config_contents, 'admintheme', 'fusion');
+    cot_installConfigReplace($config_contents, 'admintheme', 'fusion');
 	file_put_contents($file['config'], $config_contents);
 }

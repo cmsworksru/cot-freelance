@@ -1,5 +1,4 @@
 <?php
-
 /**
  * [BEGIN_COT_EXT]
  * Hooks=tools
@@ -12,9 +11,9 @@ require_once cot_langfile('paypro', 'plug');
 $t = new XTemplate(cot_tplfile('paypro.admin', 'plug', true));
 
 $id = cot_import('id', 'G', 'INT');
-
-if ($a == 'add')
-{
+$username = null;
+$months = null;
+if ($a == 'add') {
 	$username = cot_import('username', 'P', 'TXT', 100, TRUE);
 	$months = cot_import('months', 'P', 'INT');
 	$urr = $db->query("SELECT * FROM $db_users WHERE user_name='" . $username . "'")->fetch();
@@ -67,4 +66,4 @@ if(is_array($otherusers))
 }
 
 $t->parse('MAIN');
-$adminmain = $t->text('MAIN');
+$adminMain = $t->text('MAIN');

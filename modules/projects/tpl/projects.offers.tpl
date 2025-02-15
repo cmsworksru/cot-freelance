@@ -52,8 +52,8 @@
 					<!-- IF {OFFER_ROW_CHOISE} != "performer" AND {PERFORMER_USERID} == "" -->
 					<a href="{OFFER_ROW_SETPERFORMER}" class="btn btn-success btn-block">{PHP.L.offers_ispolnitel}</a> 
 					<!-- ENDIF -->
-					<!-- IF {OFFER_ROW_CHOISE} != "refuse" AND {PHP.cot_plugins_active.sbr} -->
-					<a href="{OFFER_ROW_SBRCREATELINK}" class="btn btn-primary btn-block">{PHP.L.sbr_createlink}</a> 
+					<!-- IF {OFFER_ROW_CHOISE} != "refuse" AND {PHP|cot_plugin_active('sbr')} -->
+					<a href="{OFFER_ROW_SBRCREATELINK}" class="btn btn-primary btn-block">{PHP.L.sbr_createlink}</a>
 					<!-- ENDIF -->
 				</div>
 			</div>
@@ -86,7 +86,7 @@
 				<!-- ENDIF -->
 			</p>
 			<p class="text">
-				<!-- IF {PHP.cot_plugins_active.mavatars} -->
+				<!-- IF {PHP|cot_plugin_active('mavatars')} -->
 					<!-- IF {OFFER_ROW_MAVATARCOUNT} -->
 						<h5>{PHP.L.Files}:</h5>
 						<ol class="files">
@@ -155,7 +155,7 @@
 				<td align="right" class="top">{PHP.L.offers_text_predl}:</td>
 				<td>{OFFER_FORM_TEXT}</td>
 			</tr>
-			<!-- IF {PHP.cot_plugins_active.mavatars} -->
+			<!-- IF {PHP|cot_plugin_active('mavatars')} -->
 			<tr>
 				<td align="right" class="top">{PHP.L.Files}:</td>
 				<td>{OFFER_FORM_MAVATAR}</td>

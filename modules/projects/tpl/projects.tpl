@@ -6,7 +6,7 @@
 <div class="pull-right label label-info margintop10">{PHP.L.projects_isrealized}</div>
 <!-- ENDIF -->
 
-<!-- IF {PHP.cot_plugins_active.paypro} AND {PRJ_FORPRO} -->
+<!-- IF {PHP|cot_plugin_active('paypro')} AND {PRJ_FORPRO} -->
 <div class="pull-right margintop10"><span class="label label-important">{PHP.L.paypro_forpro}</span></div>
 <!-- ENDIF -->
 
@@ -39,7 +39,7 @@
 	<div class="span8">	
 		{PRJ_TEXT}
 		
-		<!-- IF {PHP.cot_plugins_active.mavatars} -->
+		<!-- IF {PHP|cot_plugin_active('mavatars')} -->
 			<!-- IF {PRJ_MAVATARCOUNT} -->
 				<div style="clear:both;"></div>
 				<h5>{PHP.L.Files}:</h5>
@@ -58,7 +58,7 @@
 		<p class="small region">{PRJ_COUNTRY} {PRJ_REGION} {PRJ_CITY}</p>
 		<p class="date">{PHP.L.Date}: {PRJ_DATE}</p>
 		
-		<!-- IF {PHP.cot_plugins_active.tags} AND {PHP.cot_plugins_active.tagslance} AND {PHP.cfg.plugin.tagslance.projects} -->
+		<!-- IF {PHP|cot_plugin_active('tags')} AND {PHP|cot_plugin_active('tagslance')} AND {PHP.cfg.plugin.tagslance.projects} -->
 		<p class="small">{PHP.L.Tags}: 
 			<!-- BEGIN: PRJ_TAGS_ROW --><!-- IF {PHP.tag_i} > 0 -->, <!-- ENDIF --><a href="{PRJ_TAGS_ROW_URL}" title="{PRJ_TAGS_ROW_TAG}" rel="nofollow">{PRJ_TAGS_ROW_TAG}</a><!-- END: PRJ_TAGS_ROW -->
 			<!-- BEGIN: PRJ_NO_TAGS -->{PRJ_NO_TAGS}<!-- END: PRJ_NO_TAGS -->

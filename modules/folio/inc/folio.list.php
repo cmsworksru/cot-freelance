@@ -1,12 +1,10 @@
 <?php
-
 /**
- * folio module
+ * Folio module
  *
  * @package folio
- * @version 2.5.2
- * @author CMSWorks Team
- * @copyright Copyright (c) CMSWorks.ru, littledev.ru
+ * @author CMSWorks Team, Cotonti team
+ * @copyright Copyright (c) CMSWorks.ru, littledev.ru, Cotonti team
  * @license BSD
  */
 
@@ -16,9 +14,12 @@ cot_block($usr['auth_read']);
 $sort = cot_import('sort', 'G', 'ALP');
 $c = cot_import('c', 'G', 'ALP');
 $sq = cot_import('sq', 'G', 'TXT');
-$sq = $db->prep($sq);
+$sq = Cot::$db->prep($sq);
 
-$maxrowsperpage = ($cfg['folio']['cat_' . $c]['maxrowsperpage']) ? $cfg['folio']['cat_' . $c]['maxrowsperpage'] : $cfg['folio']['cat___default']['maxrowsperpage'];
+$maxrowsperpage = !empty ($c) && isset(Cot::$cfg['folio']['cat_' . $c]['maxrowsperpage'])
+    ? Cot::$cfg['folio']['cat_' . $c]['maxrowsperpage']
+    : Cot::$cfg['folio']['cat___default']['maxrowsperpage'];
+
 list($pn, $d, $d_url) = cot_import_pagenav('d', $maxrowsperpage);
 
 /* === Hook === */
@@ -92,11 +93,14 @@ $list_url_path = array('c' => $c, 'sort' => $sort, 'sq' => $sq);
 // Building the canonical URL
 $out['canonical_uri'] = cot_url('folio', $list_url_path);
 
-$mskin = cot_tplfile(array('folio', 'list', $structure['folio'][$c]['tpl']));
+$mskin = cot_tplfile([
+    'folio',
+    'list',
+    !empty($c) && isset(Cot::$structure['folio'][$c]) ? Cot::$structure['folio'][$c]['tpl'] : null
+]);
 
 /* === Hook === */
-foreach (cot_getextplugins('folio.list.query') as $pl)
-{
+foreach (cot_getextplugins('folio.list.query') as $pl) {
 	include $pl;
 }
 /* ===== */
@@ -106,16 +110,19 @@ $t = new XTemplate($mskin);
 $where = ($where) ? 'WHERE ' . implode(' AND ', $where) : '';
 $order = ($order) ? 'ORDER BY ' . implode(', ', $order) : '';
 
-$totalitems = $db->query("SELECT COUNT(*) FROM $db_folio AS f $join_condition 
-	LEFT JOIN $db_users AS u ON u.user_id=f.item_userid
-	" . $where . "")->fetchColumn();
+$totalitems = Cot::$db->query(
+    'SELECT COUNT(*) FROM ' . Cot::$db->folio . ' AS f ' . ($join_condition ?? '')
+	. " LEFT JOIN " . Cot::$db->users . ' AS u ON u.user_id = f.item_userid '
+	. $where
+)->fetchColumn();
 
-$sqllist = $db->query("SELECT f.*, u.* $join_columns 
-	FROM $db_folio AS f $join_condition 
-	LEFT JOIN $db_users AS u ON u.user_id=f.item_userid 
-	" . $where . " 
-	" . $order . "
-	LIMIT $d, " . $maxrowsperpage);
+$sqllist = Cot::$db->query(
+    'SELECT f.*, u.* ' . ($join_columns ?? '')
+	. ' FROM ' . Cot::$db->folio . ' AS f ' . ($join_condition ?? '')
+	. ' LEFT JOIN ' . Cot::$db->users . ' AS u ON u.user_id = f.item_userid '
+	. $where . ' ' . $order
+    . " LIMIT $d, $maxrowsperpage"
+);
 
 $pagenav = cot_pagenav('folio', $list_url_path, $d, $totalitems, $maxrowsperpage);
 

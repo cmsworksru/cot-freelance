@@ -14,17 +14,18 @@ defined('COT_CODE') or die('Wrong URL.');
 /**
  * Module Config
  */
+$tmpCurrency = !empty(cot::$cfg['payments']['valuta']) ? cot::$cfg['payments']['valuta'] : 'руб.';
 $L['cfg_balance_enabled'] = array('Включить внутренние счета');
 $L['cfg_valuta'] = array('Валюта сайта');
 $L['cfg_transfers_enabled'] = array('Включить переводы между пользователями');
 $L['cfg_transfertax'] = array('Комиссия за переводы между пользователями', '%');
-$L['cfg_transfermin'] = array('Минимальная сумма перевода между пользователями', $cfg['payments']['valuta']);
-$L['cfg_transfermax'] = array('Максимальная сумма перевода между пользователями', $cfg['payments']['valuta']);
+$L['cfg_transfermin'] = array('Минимальная сумма перевода между пользователями', $tmpCurrency);
+$L['cfg_transfermax'] = array('Максимальная сумма перевода между пользователями', $tmpCurrency);
 $L['cfg_transfertaxfromrecipient'] = array('Удерживать комиссию с получателя перевода');
 $L['cfg_payouts_enabled'] = array('Включить заявки на вывод со счета');
 $L['cfg_payouttax'] = array('Комиссия за вывод со счета', '%');
-$L['cfg_payoutmin'] = array('Минимальная сумма для вывода со счета', $cfg['payments']['valuta']);
-$L['cfg_payoutmax'] = array('Максимальная сумма для вывода со счета', $cfg['payments']['valuta']);
+$L['cfg_payoutmin'] = array('Минимальная сумма для вывода со счета', $tmpCurrency);
+$L['cfg_payoutmax'] = array('Максимальная сумма для вывода со счета', $tmpCurrency);
 $L['cfg_clearpaymentsdays'] = array('Очищать базу от неоплаченных платежек через', 'дней');
 
 $L['info_desc'] = 'Система оплаты';
@@ -167,9 +168,20 @@ $L['payments_code'] = 'Код';
 $L['payments_desc'] = 'Назначение';
 $L['payments_summ'] = 'Сумма';
 
+$L['payments_payment_already_made'] = 'Платеж уже оплачен';
+$L['payments_payment_system'] = 'Платежная система';
+$L['payments_payment_method'] = 'Платежный метод';
+$L['payments_payment_id'] = 'ID платежа';
+$L['payments_payment_id_hint'] = 'на нашей стороне';
+$L['payments_payment_not_allowed'] = 'Нельзя совершить оплату';
+$L['payments_transaction'] = 'Транзакция';
+$L['payments_transaction_hint'] = 'на стороне ПС';
+
+$L['payments_payment_success'] = 'Оплата прошла успешно';
+$L['payments_payment_fail'] = 'Оплата не произведена! Пожалуйста, повторите попытку. Если ошибка повторится, обратитесь к администратору сайта';
+
 $L['payments_error_message_'] = 'Произошла ошибка в запросе! Пожалуйста, свяжитесь с администрацией сайта и сообщите какие действия привели вас к этому сообщению об ошибке.';
 $L['payments_error_message_1'] = 'Такой страницы не существует! Пожалуйста, свяжитесь с администрацией сайта и сообщите какие действия привели вас к этому сообщению об ошибке.';
 $L['payments_error_message_2'] = 'Недопустимая операция! Пожалуйста, свяжитесь с администрацией сайта и сообщите какие действия привели вас к этому сообщению об ошибке.';
 $L['payments_error_message_3'] = 'Сумма к оплате не соответствует стоимости услуги! Пожалуйста, свяжитесь с администрацией сайта и сообщите какие действия привели вас к этому сообщению об ошибке.';
 
-?>

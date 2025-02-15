@@ -14,6 +14,11 @@
  * @copyright Copyright (c) CMSWorks.ru
  * @license BSD
  */
+
+use cot\modules\payments\dictionaries\PaymentDictionary;
+use cot\modules\payments\Repositories\PaymentRepository;
+use cot\modules\payments\Services\PaymentService;
+
 defined('COT_CODE') && defined('COT_PLUG') or die('Wrong URL');
 
 require_once cot_incfile('ikassabilling', 'plug');
@@ -25,7 +30,7 @@ $pid = cot_import('pid', 'G', 'INT');
 if (empty($m))
 {
 	// Получаем информацию о заказе
-	if (!empty($pid) && $pinfo = cot_payments_payinfo($pid))
+	if (!empty($pid) && $pinfo = PaymentRepository::getInstance()->getById($pid))
 	{
 		cot_block($usr['id'] == $pinfo['pay_userid']);
 		cot_block($pinfo['pay_status'] == 'new' || $pinfo['pay_status'] == 'process');
@@ -45,16 +50,13 @@ if (empty($m))
 			'IKASSA_FORM' => $ikassa_form,
 		));
 		$t->parse("MAIN.IKASSAFORM");
-		
-		cot_payments_updatestatus($pid, 'process'); // Изменяем статус "в процессе оплаты"
-	}
-	else
-	{
+
+        // Изменяем статус "в процессе оплаты"
+        PaymentService::getInstance()->setStatus($pid, PaymentDictionary::STATUS_PROCESS, 'ikassa');
+	} else {
 		cot_die();
 	}
-}
-elseif ($m == 'success')
-{
+} elseif ($m == 'success') {
 	if($_SERVER['REQUEST_METHOD'] == 'POST' && $cfg['plugin']['ikassabilling']['enablepost'])
 	{
 		$status_data = $_POST;
@@ -67,45 +69,45 @@ elseif ($m == 'success')
 	if($status_data['ik_inv_st'] == 'success' && $status_data['ik_co_id'] == $cfg['plugin']['ikassabilling']['shop_id']) {
 		
 		// проверка наличия номера платежки и ее статуса
-		$pinfo = cot_payments_payinfo($status_data['ik_pm_no']);
+		$pinfo = PaymentRepository::getInstance()->getById($status_data['ik_pm_no']);
 		if ($pinfo['pay_status'] == 'done')
 		{
-			$plugin_body = $L['ikassabilling_error_done'];
+			$pluginBody = $L['ikassabilling_error_done'];
 			$redirect = $pinfo['pay_redirect'];
 		}
 		elseif ($pinfo['pay_status'] == 'paid')
 		{
-			$plugin_body = $L['ikassabilling_error_paid'];
+			$pluginBody = $L['ikassabilling_error_paid'];
 		}
 		elseif ($pinfo['pay_status'] == 'process')
 		{
-			$plugin_body = $L['ikassabilling_error_wait'];
+			$pluginBody = $L['ikassabilling_error_wait'];
 		}
 		else
 		{
-			$plugin_body = $L['roboxbilling_error_otkaz'];
+			$pluginBody = $L['roboxbilling_error_otkaz'];
 		}
 	}
 	elseif($status_data['ik_inv_st'] == 'waitAccept' || $status_data['ik_inv_st'] == 'process')
 	{
-		$plugin_body = $L['ikassabilling_error_wait'];
+		$pluginBody = $L['ikassabilling_error_wait'];
 	}
 	elseif($status_data['ik_inv_st'] == 'canceled')
 	{
-		$plugin_body = $L['ikassabilling_error_canceled'];
+		$pluginBody = $L['ikassabilling_error_canceled'];
 	}
 	elseif($status_data['ik_inv_st'] == 'fail')
 	{
-		$plugin_body = $L['ikassabilling_error_fail'];
+		$pluginBody = $L['ikassabilling_error_fail'];
 	}
 	else
 	{
-		$plugin_body = $L['ikassabilling_error_incorrect'];
+		$pluginBody = $L['ikassabilling_error_incorrect'];
 	}
 
 	$t->assign(array(
 		"IKASSA_TITLE" => $L['ikassabilling_error_title'],
-		"IKASSA_ERROR" => $plugin_body
+		"IKASSA_ERROR" => $pluginBody
 	));
 	
 	if($redirect){

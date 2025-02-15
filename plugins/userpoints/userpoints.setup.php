@@ -4,10 +4,10 @@
  * Code=userpoints
  * Name=UserPoints
  * Description=Система рейтингов пользователей
- * Version=2.1.1
- * Date=21.12.2010
- * Author=CMSWorks Team
- * Copyright=Copyright (c) CMSWorks.ru, littledev.ru
+ * Version=3.0.1
+ * Date=2025-01-20
+ * Author=CMSWorks Team, Cotonti team
+ * Copyright=Copyright (c) CMSWorks.ru, littledev.ru, Cotonti team
  * Notes=
  * Auth_guests=R
  * Lock_guests=W12345A
@@ -31,11 +31,10 @@
  * UserPoints plugin
  *
  * @package userpoints
- * @version 2.1.1
- * @author CMSWorks Team
- * @copyright Copyright (c) CMSWorks.ru, littledev.ru
+ * @author CMSWorks Team, Cotonti team
+ * @copyright Copyright (c) CMSWorks.ru, littledev.ru, Cotonti team
  * @license BSD
  */
+
 defined('COT_CODE') or die('Wrong URL');
 
-?>

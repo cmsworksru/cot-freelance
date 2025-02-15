@@ -9,6 +9,12 @@
  * @copyright Copyright (c) CMSWorks.ru
  * @license BSD
  */
+
+use cot\modules\payments\dictionaries\PaymentDictionary;
+use cot\modules\payments\Repositories\PaymentRepository;
+use cot\modules\payments\Services\PaymentService;
+use cot\modules\payments\Services\UserBalanceService;
+
 defined('COT_CODE') or die('Wrong URL');
 
 // Requirements
@@ -86,7 +92,7 @@ function cot_payments_userservice($area, $userid, $expire, $action='set')
  * @param int $summ стоимость
  * @param array $options дополнительные параметры
  */
-function cot_payments_create_order($area = 'balance', $summ, $options = array())
+function cot_payments_create_order($area = 'balance', $summ = 0, $options = array())
 {
 	global $db_payments, $db_payments_balance, $db, $sys, $cfg, $usr;
 
@@ -98,13 +104,11 @@ function cot_payments_create_order($area = 'balance', $summ, $options = array())
 	$payinfo['pay_userid'] = $usr['id'];
 	$payinfo['pay_area'] = $area;
 	$payinfo['pay_summ'] = $summ;
-	$payinfo['pay_cdate'] = $sys['now'];
-	$payinfo['pay_status'] = 'new';
+	$payinfo['pay_cdate'] = Cot::$sys['now'];
+	$payinfo['pay_status'] = PaymentDictionary::STATUS_NEW;
 
-	if (count($options) > 0)
-	{
-		foreach ($options as $i => $opt)
-		{
+	if (count($options) > 0) {
+		foreach ($options as $i => $opt) {
 			$payinfo['pay_' . $i] = $opt;
 		}
 	}
@@ -119,13 +123,12 @@ function cot_payments_create_order($area = 'balance', $summ, $options = array())
 
 /**
  * Получение информации о платежке
+ * @deprecated
+ * @see PaymentRepository::getById
  */
-function cot_payments_payinfo($pid)
+function cot_payments_payinfo($pid): ?array
 {
-	global $db_payments, $db;
-
-	$sql = $db->query("SELECT * FROM $db_payments WHERE pay_id=" . $pid);
-	return ($pinfo = $sql->fetch()) ? $pinfo : false;
+    return PaymentRepository::getInstance()->getById($pid);
 }
 
 /**
@@ -152,50 +155,31 @@ function cot_payments_getallpays($area, $status = 'all')
  * process - в процессе оплаты
  * paid - оплачена
  * done - исполнено (услуга активирована)
+ * @deprecated
+ * @see \cot\modules\payments\Services\PaymentService::setStatus()
  */
 function cot_payments_updatestatus($pid, $status)
 {
-	global $db_payments, $db, $sys;
-
-	$pdata['pay_status'] = $status;
-	if ($status == 'paid') // Оплачено
-	{
-		$pdata['pay_pdate'] = $sys['now'];
-	}
-	if ($status == 'done') // Исполнено
-	{
-		$pdata['pay_adate'] = $sys['now'];
-	}
-	$sql = $db->update($db_payments, $pdata, "pay_id=?", array($pid));
-	return ($sql) ? true : false;
+	return PaymentService::getInstance()-setStatus($pid, $status);
 }
 
-
-function cot_payments_getuserbalance($userid){
-	global $db_payments, $db;
-	
-	$balance = $db->query("SELECT SUM(pay_summ) FROM $db_payments 
-		WHERE pay_userid=".$userid." AND pay_area='balance' AND pay_status='done'")->fetchColumn();
-	
-	return ($balance > 0) ? $balance : 0;
+/**
+ * @deprecated
+ * @see UserBalanceService::getByUserId
+ */
+function cot_payments_getuserbalance($userid): float
+{
+    return (float) UserBalanceService::getInstance()->getByUserId((int) $userid);
 }
 
-
+/**
+ * @deprecated
+ * @see UserBalanceService::updateForUser()
+ */
 function cot_payments_updateuserbalance($userid, $summ, $pid)
 {
-	global $db_payments, $db, $sys;
-
-	$pdata['pay_userid'] = $userid;
-	$pdata['pay_summ'] = $summ;
-	$pdata['pay_area'] = 'balance';
-	$pdata['pay_status'] = 'done';
-	$pdata['pay_code'] = $pid;
-	$pdata['pay_cdate'] = $sys['now'];
-	$pdata['pay_pdate'] = $sys['now'];
-	$pdata['pay_adate'] = $sys['now'];
-	
-	$sql = $db->insert($db_payments, $pdata);
-	return ($sql) ? true : false;
+	return UserBalanceService::getInstance()
+        ->updateForUser((int) $userid, (string) $summ, $pid ? (int) $pid : null);
 }
 
 
@@ -204,27 +188,24 @@ function cot_generate_paytags($item_data, $tag_prefix = '')
 	global $db, $cfg, $L, $Ls, $R, $db_payments, $usr, $sys;
 	static $extp_first = null, $extp_main = null;
 
-	if (is_null($extp_first))
-	{
+	if (is_null($extp_first)) {
 		$extp_first = cot_getextplugins('paytags.first');
 		$extp_main = cot_getextplugins('paytags.main');
 	}
 
 	/* === Hook === */
-	foreach ($extp_first as $pl)
-	{
+	foreach ($extp_first as $pl) {
 		include $pl;
 	}
 	/* ===== */
-	if (!is_array($item_data))
-	{
+
+	if (!is_array($item_data)) {
 		$sql = $db->query("SELECT * FROM $db_payments WHERE pay_id = '" . (int)$item_data . "' LIMIT 1");
 		$item_data = $sql->fetch();
 	}
 
-	if ($item_data['pay_id'] > 0 && !empty($item_data['pay_area']))
-	{
-		$temp_array = array(
+	if ($item_data['pay_id'] > 0 && !empty($item_data['pay_area'])) {
+		$temp_array = [
 			'ID' => $item_data['pay_id'],
 			'USERID' => $item_data['pay_userid'],
 			'CDATE' => $item_data['pay_cdate'],
@@ -236,7 +217,11 @@ function cot_generate_paytags($item_data, $tag_prefix = '')
 			'SUMM' => $item_data['pay_summ'],
 			'TIME' => $item_data['pay_time'],
 			'STATUS' => $item_data['pay_status'],
-		);
+            'SYSTEM' => $item_data['pay_system'],
+            'METHOD' => $item_data['pay_method'],
+            'PS_PAYMENT_ID' => $item_data['pay_payment_id'],
+            'PS_TRANSACTION' => $item_data['pay_transaction_id'],
+		];
 
 		/* === Hook === */
 		foreach ($extp_main as $pl)

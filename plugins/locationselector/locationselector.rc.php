@@ -18,4 +18,4 @@
 
 defined('COT_CODE') or die('Wrong URL.');
 
-cot_rc_add_file($cfg['plugins_dir'] . '/locationselector/js/locationselector.js');
+Resources::addFile(Cot::$cfg['plugins_dir'] . '/locationselector/js/locationselector.js');

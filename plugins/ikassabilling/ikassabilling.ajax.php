@@ -14,6 +14,11 @@
  * @copyright Copyright (c) CMSWorks.ru
  * @license BSD
  */
+
+use cot\modules\payments\dictionaries\PaymentDictionary;
+use cot\modules\payments\Repositories\PaymentRepository;
+use cot\modules\payments\Services\PaymentService;
+
 defined('COT_CODE') or die('Wrong URL');
 
 require_once cot_incfile('payments', 'module');
@@ -52,25 +57,26 @@ array_push($dataSet, $key);
 $signString = implode(':', $dataSet); 
 $sign = base64_encode(md5($signString, true)); 
 
-if(!empty($dataSet['ik_pm_no']))
-{
-	$payinfo = cot_payments_payinfo($dataSet['ik_pm_no']);
+if(!empty($dataSet['ik_pm_no'])) {
+	$payinfo = PaymentRepository::getInstance()->getById($dataSet['ik_pm_no']);
 }
 
-if ($ik_sign === $sign 
+if (
+    $ik_sign === $sign
 	&& $dataSet['ik_inv_st'] == 'success'	
 	&& $dataSet['ik_co_id'] == $cfg['plugin']['ikassabilling']['shop_id'])
 {
-	if(cot_payments_updatestatus($dataSet['ik_pm_no'], 'paid'))
-	{
+    if (
+        PaymentService::getInstance()->setStatus(
+            $dataSet['ik_pm_no'],
+            PaymentDictionary::STATUS_PAID,
+            'ikassa'
+        )
+    ) {
 		header ( 'HTTP/1.1 200' );
-	}
-	else
-	{
+	} else {
 		header ( 'HTTP/1.1 302' );
 	}
-}
-else
-{
+} else {
 	header ( 'HTTP/1.1 302' );
 }

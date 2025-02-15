@@ -15,10 +15,11 @@ require_once cot_incfile('projects', 'module');
 
 global $db_projects;
 
-// Add field if missing
-if (!$db->fieldExists($db_projects, "item_top"))
-{
-	$dbres = $db->query("ALTER TABLE `$db_projects` ADD COLUMN `item_top` int(10) NOT NULL");
+if (empty($db_projects)) {
+    Cot::$db->registerTable('projects');
 }
 
-?>
+// Add field if missing
+if (!Cot::$db->fieldExists(Cot::$db->projects, "item_top")) {
+	Cot::$db->query('ALTER TABLE ' . Cot::$db->projects .' ADD COLUMN item_top INT UNSIGNED NOT NULL DEFAULT 0');
+}

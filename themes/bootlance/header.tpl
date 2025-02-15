@@ -15,7 +15,6 @@
 </head>
 
 <body>
-
 	<!-- IF {PHP.usr.id} == 0 -->
 	<div id="AuthModal" class="modal hide fade">
 		<div class="modal-header">
@@ -63,17 +62,17 @@
 							<!-- END: GUEST -->
 							
 							<!-- BEGIN: USER -->
-							<li><a href="{PHP.usr.name|cot_url('users', 'm=details&u='$this)}">{PHP.usr.name}</a></li>
+							<li><a href="{PHP.usr.name|cot_url('users', 'm=details&u=$this')}">{PHP.usr.name}</a></li>
 							<li><a href="{PHP|cot_url('users', 'm=profile')}">{PHP.L.Profile}</a></li>
-							<!-- IF {PHP.cot_modules.payments} AND {PHP.cfg.payments.balance_enabled} -->
+							<!-- IF {PHP|cot_module_active('payments')} AND {PHP.cfg.payments.balance_enabled} -->
 							<li><a href="{HEADER_USER_BALANCE_URL}">{PHP.L.payments_mybalance}: {HEADER_USER_BALANCE|number_format($this, '2', '.', ' ')} {PHP.cfg.payments.valuta}</a></li>
 							<!-- ENDIF -->
-							<!-- IF {PHP.cot_modules.projects} -->
+							<!-- IF {PHP|cot_module_active('projects')} -->
 							<li class="dropdown">
 								<a class="dropdown-toggle" data-toggle="dropdown" href="#">{PHP.L.projects_projects}<b class="caret"></b></a>
 								<ul class="dropdown-menu">
 									<!-- IF {PHP|cot_auth('projects', 'any', 'W')} -->
-									<li><a href="{PHP.usr.id|cot_url('users', 'm=details&id='$this'&tab=projects')}">{PHP.L.projects_myprojects}</a></li>
+									<li><a href="{PHP.usr.id|cot_url('users', 'm=details&id=$this&tab=projects')}">{PHP.L.projects_myprojects}</a></li>
 									<!-- ENDIF -->
 									<!-- IF {PHP.cot_plugins_active.sbr} -->
 									<li><a href="{PHP|cot_url('sbr')}">{PHP.L.sbr_mydeals}</a></li>
@@ -84,19 +83,19 @@
 								</ul>
 							</li>
 							<!-- ENDIF -->
-							<!-- IF {PHP.cot_modules.market} -->
+							<!-- IF {PHP|cot_module_active('market')} -->
 							<li class="dropdown">
 								<a class="dropdown-toggle" data-toggle="dropdown" href="#">{PHP.L.market}<b class="caret"></b></a>
 								<ul class="dropdown-menu">
-									<li><a href="{PHP.usr.id|cot_url('users', 'm=details&id='$this'&tab=market')}">{PHP.L.market_myproducts}</a></li>
-									<!-- IF {PHP.cot_plugins_active.marketorders} -->
+									<li><a href="{PHP.usr.id|cot_url('users', 'm=details&id=$this&tab=market')}">{PHP.L.market_myproducts}</a></li>
+									<!-- IF {PHP|cot_plugin_active('marketorders')} -->
 									<li><a href="{PHP|cot_url('marketorders', 'm=sales')}">{PHP.L.marketorders_mysales}</a></li>
 									<li><a href="{PHP|cot_url('marketorders', 'm=purchases')}">{PHP.L.marketorders_mypurchases}</a></li>
 									<!-- ENDIF --> 
 								</ul>
 							</li>
 							<!-- ENDIF -->
-							<!-- IF {PHP.cot_plugins_active.paypro} -->
+							<!-- IF {PHP|cot_plugin_active('paypro')} -->
 							<li>
 								<!-- IF {HEADER_USER_PROEXPIRE} -->
 								<a href="{PHP|cot_url('plug', 'e=paypro')}" title="{PHP.L.paypro_header_extend}">{PHP.L.paypro_header_expire_short} {HEADER_USER_PROEXPIRE|cot_date('d.m.Y', $this)}</a>
@@ -105,6 +104,7 @@
 								<!-- ENDIF -->
 							</li>
 							<!-- ENDIF -->
+							{HEADER_FL_EVENTS}
 							<!-- IF {HEADER_USER_PMREMINDER} --><li>{HEADER_USER_PMREMINDER}</li><!-- ENDIF -->
 							<!-- IF {HEADER_NOTICES} -->
 							<li class="dropdown">
@@ -146,7 +146,9 @@
 					<li<!-- IF {PHP.env.ext} == 'projects' --> class="active"<!-- ENDIF -->><a href="{PHP|cot_url('projects')}">{PHP.L.projects_projects}</a></li>
 					<!-- ENDIF -->
 					<li<!-- IF {PHP.env.ext} == 'users' AND ({PHP.group} == {PHP.cot_groups.4.alias} AND {PHP.m} == 'main' --> class="active"<!-- ENDIF -->><a href="{PHP.cot_groups.4.alias|cot_url('users', 'group='$this)}">{PHP.cot_groups.4.name}</a></li>
+					<!-- IF {PHP.cot_groups.7} -->
 					<li<!-- IF {PHP.env.ext} == 'users' AND ({PHP.group} == {PHP.cot_groups.7.alias} AND {PHP.m} == 'main' --> class="active"<!-- ENDIF -->><a href="{PHP.cot_groups.7.alias|cot_url('users', 'group='$this)}">{PHP.cot_groups.7.name}</a></li>
+					<!-- ENDIF -->
 					<!-- IF {PHP.cot_modules.market} -->
 					<li<!-- IF {PHP.env.ext} == 'market' AND !{PHP.type} --> class="active"<!-- ENDIF -->><a href="{PHP|cot_url('market')}">{PHP.L.market}</a></li>
 					<!-- ENDIF -->

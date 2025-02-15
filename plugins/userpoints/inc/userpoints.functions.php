@@ -1,27 +1,24 @@
 <?php
-
 /**
  * UserPoints plugin
  *
  * @package userpoints
- * @version 2.0.0
- * @author CMSWorks Team
- * @copyright Copyright (c) CMSWorks.ru, littledev.ru
+ * @author CMSWorks Team, Cotonti team
+ * @copyright Copyright (c) CMSWorks.ru, littledev.ru, Cotonti team
  * @license BSD
  */
 
 // Requirements
 require_once cot_langfile('userpoints', 'plug');
 
-// Global variables
-global $db_userpoints, $db_x;
-$db_userpoints = (isset($db_userpoints)) ? $db_userpoints : $db_x . 'userpoints';
+// Register table name
+Cot::$db->registerTable('userpoints');
 
 function cot_setuserpoints($points, $type, $userid, $itemid = 0)
 {
 	global $db, $cfg, $sys, $db_userpoints, $db_users;
 	
-	if ($urr = $db->query("SELECT * FROM $db_users WHERE user_id=" . (int)$userid)->fetch())
+	if ($urr = $db->query("SELECT * FROM $db_users WHERE user_id=" . (int) $userid)->fetch())
 	{
 		if(preg_match("/([\d\.]{1,}\%)/", $points, $pt))
 		{
@@ -52,19 +49,18 @@ function cot_setuserpoints($points, $type, $userid, $itemid = 0)
 	}
 }
 
-function cot_get_topusers ($maingrp, $count, $sqlsearch='', $tpl='index')
+function cot_get_topusers ($maingrp, $count, $sqlsearch = '', $tpl = 'index')
 {
 	global $L, $cfg, $db, $db_users;
 
-	$t1 = new XTemplate(cot_tplfile(array('userpoints', $tpl), 'plug'));
+	$t1 = new XTemplate(cot_tplfile(['userpoints', $tpl], 'plug'));
 	
 	$sqlsearch = !empty($sqlsearch) ? " AND " . $sqlsearch : '';
 	
 	$topusers = $db->query("SELECT * FROM $db_users
 		WHERE user_userpoints>0 AND user_maingrp=".$maingrp." $sqlsearch ORDER BY user_userpoints DESC LIMIT " . $count)->fetchAll();
 
-	foreach ($topusers as $tur)
-	{
+	foreach ($topusers as $tur) {
 		$t1->assign(cot_generate_usertags($tur, 'TOP_ROW_'));
 		$t1->parse('MAIN.TOP_ROW');
 	}
@@ -72,6 +68,3 @@ function cot_get_topusers ($maingrp, $count, $sqlsearch='', $tpl='index')
 	$t1->parse('MAIN');
 	return $t1->text('MAIN');
 }
-
-
-?>

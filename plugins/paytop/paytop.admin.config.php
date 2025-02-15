@@ -18,7 +18,11 @@ Hooks=admin.config.edit.loop
 defined('COT_CODE') or die('Wrong URL');
 
 require_once cot_incfile('paytop', 'plug');
-$adminhelp = $L['paytop_help'];
+
+if (!isset($adminHelp)) {
+    $adminHelp = '';
+}
+$adminHelp .= isset(cot::$L['paytop_help']) ? cot::$L['paytop_help'] : '';
 
 if ($p == 'paytop' && $row['config_name'] == 'paytopareas' && $cfg['jquery'])
 {

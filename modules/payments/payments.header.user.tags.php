@@ -1,28 +1,34 @@
 <?php
+/* ====================
+[BEGIN_COT_EXT]
+Hooks=header.user.tags
+[END_COT_EXT]
+==================== */
 
-/**
- * [BEGIN_COT_EXT]
- * Hooks=header.user.tags
- * [END_COT_EXT]
- */
+use cot\modules\payments\Services\UserBalanceService;
+
 /**
  * Payments module
  *
  * @package payments
- * @version 1.1.2
- * @author CMSWorks Team
- * @copyright Copyright (c) CMSWorks.ru
+ * @author CMSWorks Team, Kalnov Alexey
+ * @copyright (c) CMSWorks.ru, Kalnov Alexey https://lily-software.com
  * @license BSD
+ *
+ * @var XTemplate $t
  */
+
 defined('COT_CODE') or die('Wrong URL.');
 
 require_once cot_incfile('payments', 'module');
 
-if ($cfg['payments']['balance_enabled'])
-{
-	$t->assign(array(
-		'HEADER_USER_BALANCE' => cot_payments_getuserbalance($usr['id']),
-		'HEADER_USER_BALANCE_URL' => cot_url('payments', 'm=balance'),
-	));
+if (defined('COT_ADMIN') || Cot::$env['ext'] === 'admin') {
+    return;
 }
-?>
+
+if (Cot::$cfg['payments']['balance_enabled']) {
+	$t->assign([
+		'HEADER_USER_BALANCE' => (float) UserBalanceService::getInstance()->getByUserId(Cot::$usr['id']),
+		'HEADER_USER_BALANCE_URL' => cot_url('payments', 'm=balance'),
+	]);
+}

@@ -1,37 +1,34 @@
-##Фриланс-биржа на Cotonti Siena##
+# Freelance Exchange bundle
 
-Версия сборки: 2.7.1
+Freelance Exchange bundle for CMF Cotonti. With this bundle, you can organize any exchange to search for performers for various jobs. Its  functionality provides flexible options for operation and further development.
 
-Copyright 2012 - 2016 CMSWorks Team
+Authors: [Bulat Yusupov](https://github.com/devkont) и CMSWorks team, Cotonti team  
+Bundle page: https://www.cotonti.com/en/extensions/commerce/freelance-bundle
 
-Сайт по сборке: https://Cotonti.CMSWorks.ru
+## Main features
 
-##Подготовка к установке##
+User accounts with their personal pages (contact information is displayed on the personal page, as well as lists of published projects, works in the portfolio and in the marketplace); Catalog of jobs (job projects), the ability to publish jobs. Jobs search with filtering by region and keywords; Catalog of freelancers and employers sorted by specialization; Payment module with internal user accounts and the ability to replenish and pay for services; Included payment systems: [Interkassa](https://interkassa.com/), [Robokassa](https://robokassa.com/) and WebMoney (separate plugins) and the ability to easily connect other payment systems; Paid service "PRO account"; Paid service "Paid place on the main page" (Users who have paid for this service are displayed on the main page of the exchange); Secure payment service; Reviews and ratings.
 
-Это не готовая сборка сайта! Для установки необходима последняя версия фреймворка Cotonti Siena, которую можно скачать и установить с сайта http://cotonti.com
+Extensions from this bundle can be installed on existing sites and used individually and only those ones that you need.
 
-1. Скачиваете Cotonti Siena. Распаковываете архив в директорию будущего сайта.
-2. Скачиваете данную сборку фриланс-биржи и распаковываете в ту же директорию, в которую распакован Cotonti.
-3. Создайте в директории datas/ файл config.php и скопируйте в него содержимое файла datas/config-sample.php. Установите к файлу datas/config.php права на запись CHMOD 666 или CHMOD 664 (в зависимости от настроек вашего хостинга).
-4. Установите права 777 на все папки и подпапки в директории datas/, в частности:
+Or you can prepare a "build" that will use the built-in Cotonti installer to selectively install extensions from this bundle with the standard Cotonti extensions. This particular option is described below.
 
-/datas/avatars
-/datas/cache (и все подпаки)
-/datas/defaultav
-/datas/extflds
-/datas/photos
-/datas/thumbs
-/datas/users
+## Preparing for install
 
-##Установка##
+This is not a ready to use website build. To install it, you need the current version of CMF Cotonti, which can be downloaded in the [Download section](https://www.cotonti.com/download).
 
-1. Откройте ваш браузер и перейдите по ссылке: http://example.com/install.php
-2. Следуйте инструкциям на экране до окончания установки.
-При установке выберите инсталл-скрипт flance и укажите тему bootlance.
-3. Во время установки вам будет предложено выбрать плагины и расширения при первой установке. Галочкой отмечены самые основные расширения, которые необходимы для работы биржи, но вы можете выбрать также остальные при необходимости.
-4. Обязательно настройте плагин Usergroupselector, если на вашем сайте будет разделение пользователей на различные группы, например на работодателей и фрилансеров. В настройках этого плагина нужно указать какие группы будут доступны для выбора пользователям при регистрации или в профиле. Если нужно создать другую группу пользователей, то перейдите в раздел админки "Пользователи".
-5. Для того чтобы можно было закреплять файлы и изображения к проектам ( а также к предложениям в магание и в портфолио), необходимо также установить плагины mavatars и mavatarslance, которые также идут в составе сборки. Инструкция по настройке плагина.
-6. Изначально сайт будет пустой. Свои категории вы должны самостоятельно создать в разделе админки "Структура".
+- Download Cotonti. Unpack the archive into the directory of the future site.
+- Download Freelance Exchange bundle and unpack it into the same directory in which Cotonti is unpacked.
+- Set the write permissions for folders and subfolders in the **/data** directory: **/datas/avatars**, **/data/cache** (and all subfolders), **/datas/extflds**, **/datas/photos**, **/datas/thumbs**, **/datas/users**
 
-UPD: В версии 2.7.0 чтобы правильно работала структруа с подкатегориями нужно в файле datas/config.php установить опцию $cfg['customfuncs'] = true;    
-Эта опция подключает к Cotonti дополнительную библиотеку функций, которые находятся в файле system/functions.custom.php. Если у вас уже подключен этот файл, то нужно добавить в него ваши дополнительные функции, которые были в нем прописаны.
+## Install
+
+- Open your browser and follow the link: **http://your-domain.tld/install.php** (replace **your-domain.tld** with your domain)
+- Follow the on-screen instructions until the installation is complete. During installation, select the flance installation script and bootlance theme.
+- During installation, you will be prompted to select modules and plugins. The most basic extensions that are necessary for the operation of the exchange are ticked, but you can also select the rest if necessary.
+- In the file **datas/config.php** set the option `$cfg['customfuncs'] = true`;
+- Be sure to configure the Usergroupselector plugin if your site will divide users into different groups, for example, employers and freelancers. In the settings of this plugin, you need to specify which groups will be available for users to choose when registering or in the profile. If you need to create another user group, then go to the "Users" section of the admin panel.
+- In order to be able to attach files and images to projects (as well as to suggestions in the description and in the portfolio), you must also install the Mavatars and Mavatarslance plugins, which also come as part of the bundle.
+- Initially, your site will be empty. You can create your own categories yourself in the "Structure" section of the admin panel.
+
+Learn more about the possibilities of the Freelance Exchange bundle: https://www.cotonti.com/en/extensions/commerce/freelance-bundle

@@ -10,11 +10,7 @@
 
 <!-- BEGIN: DETAILS -->
 <div style="float:left; margin:15px;">
-  <!-- IF {ADMIN_EXTENSIONS_ICO} -->
-  <img src="{ADMIN_EXTENSIONS_ICO}">
-  <!-- ELSE -->
-  <img src="{PHP.cfg.system_dir}/admin/img/plugins32.png">
-  <!-- ENDIF -->
+    {ADMIN_EXTENSIONS_ICON}
 </div>
 
 <h2>{ADMIN_EXTENSIONS_TYPE}: {ADMIN_EXTENSIONS_NAME}</h2>
@@ -258,12 +254,9 @@
     <!-- END: ROW_ERROR_EXT -->
     <tr>
       <td>
-        <!-- IF {ADMIN_EXTENSIONS_ICO} -->
-        <img src="{ADMIN_EXTENSIONS_ICO}" height="24">
-        <!-- ELSE -->
-        <img src="{PHP.cfg.system_dir}/admin/img/plugins32.png" height="24">
-        <!-- ENDIF -->
+          {ADMIN_EXTENSIONS_ICON}
         <a href="{ADMIN_EXTENSIONS_DETAILS_URL}"><strong>{ADMIN_EXTENSIONS_NAME}</strong></a>
+        <p>{ADMIN_EXTENSIONS_DESCRIPTION|cot_cutstring($this,60)}</p>
       </td>
       <td>{ADMIN_EXTENSIONS_CODE_X}</td>
       <td>

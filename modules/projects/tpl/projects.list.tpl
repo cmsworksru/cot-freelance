@@ -13,22 +13,19 @@
 <div class="row">
 	<div class="span3">
 		<!-- IF {CATALOG} --><div class="well well-small">{CATALOG}</div><!-- ENDIF -->
-		
-		<!-- IF {PHP.cot_plugins_active.tags} AND {PHP.cot_plugins_active.tagslance} AND {PHP.cfg.plugin.tagslance.projects} -->
+		<!-- IF {PHP|cot_plugin_active('tags')} AND {PHP|cot_plugin_active('tagslance')} AND {PHP.cfg.plugin.tagslance.projects} -->
 		<div class="mboxHD">{PHP.L.Tags}</div>
 		{PRJ_TAG_CLOUD}
 		<!-- ENDIF -->
-				
 	</div>
 	<div class="span9">
-
 		<!-- BEGIN: PTYPES -->
 		<ul class="nav nav-tabs">
 			<li<!-- IF {PTYPE_ALL_ACT} --> class="active"<!-- ENDIF -->><a href="{PTYPE_ALL_URL}">{PHP.L.All}</a></li>
 			<!-- BEGIN: PTYPES_ROWS -->
 			<li<!-- IF {PTYPE_ROW_ACT} --> class="active"<!-- ENDIF -->><a href="{PTYPE_ROW_URL}">{PTYPE_ROW_TITLE}</a></li>
 			<!-- END: PTYPES_ROWS -->
-			<!-- IF {PHP.cot_plugins_active.paypro} -->
+			<!-- IF {PHP|cot_plugin_active('paypro')} -->
 			<li<!-- IF {PHP.forpro} --> class="active"<!-- ENDIF -->><a href="{FORPRO_URL}"><span class="label label-important">{PHP.L.paypro_forpro}</span></a></li>
 			<!-- ENDIF -->
 			<!-- IF {PHP.usr.auth_write} -->
@@ -47,7 +44,7 @@
 						<td width="100">{PHP.L.Search}:</td>
 						<td>{SEARCH_SQ}</td>
 					</tr>
-					<!-- IF {PHP.cot_plugins_active.locationselector} -->
+					<!-- IF {PHP|cot_plugin_active('locationselector')} -->
 					<tr>
 						<td >{PHP.L.Location}:</td>
 						<td>{SEARCH_LOCATION}</td>
@@ -69,7 +66,7 @@
 			</form>
 		</div>
 
-		<!-- IF {PHP.cot_plugins_active.paypro} -->
+		<!-- IF {PHP|cot_plugin_active('paypro')} -->
 			<!-- IF !{PHP|cot_getuserpro()} AND {PHP.cfg.plugin.paypro.projectslimit} > 0 AND {PHP.cfg.plugin.paypro.projectslimit} <= {PHP.usr.id|cot_getcountprjofuser($this)} -->
 			<div class="alert alert-warning">{PHP.L.paypro_warning_projectslimit_empty}</div>
 			<!-- ENDIF -->
@@ -88,7 +85,7 @@
 				<p class="owner small">{PRJ_ROW_OWNER_NAME} <span class="date">[{PRJ_ROW_DATE}]</span>   <span class="region">{PRJ_ROW_COUNTRY} {PRJ_ROW_REGION} {PRJ_ROW_CITY}</span>   {PRJ_ROW_EDIT_URL}</p>
 				<p class="text">{PRJ_ROW_SHORTTEXT}</p>
 				
-				<!-- IF {PHP.cot_plugins_active.tags} AND {PHP.cot_plugins_active.tagslance} AND {PHP.cfg.plugin.tagslance.projects} -->
+				<!-- IF {PHP|cot_plugin_active('tags')} AND {PHP|cot_plugin_active('tagslance')} AND {PHP.cfg.plugin.tagslance.projects} -->
 				<p class="small">{PHP.L.Tags}: 
 					<!-- BEGIN: PRJ_ROW_TAGS_ROW --><!-- IF {PHP.tag_i} > 0 -->, <!-- ENDIF --><a href="{PRJ_ROW_TAGS_ROW_URL}" title="{PRJ_ROW_TAGS_ROW_TAG}" rel="nofollow">{PRJ_ROW_TAGS_ROW_TAG}</a><!-- END: PRJ_ROW_TAGS_ROW -->
 					<!-- BEGIN: PRJ_ROW_NO_TAGS -->{PRJ_ROW_NO_TAGS}<!-- END: PRJ_ROW_NO_TAGS -->
@@ -96,7 +93,7 @@
 				<!-- ENDIF -->
 				
 				<div class="pull-right offers"><a href="{PRJ_ROW_OFFERS_ADDOFFER_URL}">{PHP.L.offers_add_offer}</a> ({PRJ_ROW_OFFERS_COUNT})</div>
-				<div class="type"><!-- IF {PHP.cot_plugins_active.paypro} AND {PRJ_ROW_FORPRO} --><span class="label label-important">{PHP.L.paypro_forpro}</span> <!-- ENDIF --><!-- IF {PRJ_ROW_TYPE} -->{PRJ_ROW_TYPE} / <!-- ENDIF --><a href="{PRJ_ROW_CATURL}">{PRJ_ROW_CATTITLE}</a></div>
+				<div class="type"><!-- IF {PHP|cot_plugin_active('paypro')} AND {PRJ_ROW_FORPRO} --><span class="label label-important">{PHP.L.paypro_forpro}</span> <!-- ENDIF --><!-- IF {PRJ_ROW_TYPE} -->{PRJ_ROW_TYPE} / <!-- ENDIF --><a href="{PRJ_ROW_CATURL}">{PRJ_ROW_CATTITLE}</a></div>
 			</div>
 			<hr/>
 			<!-- END: PRJ_ROWS -->

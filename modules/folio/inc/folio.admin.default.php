@@ -248,4 +248,4 @@ foreach ($extp as $pl)
 /* ===== */
 
 $t->parse("MAIN");
-$adminmain = $t->text("MAIN");
+$adminMain = $t->text("MAIN");

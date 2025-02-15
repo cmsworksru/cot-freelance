@@ -1,24 +1,25 @@
 <?php
+/* ====================
+[BEGIN_COT_EXT]
+Hooks=admin
+[END_COT_EXT]
+==================== */
 
-/**
- * [BEGIN_COT_EXT]
- * Hooks=admin
- * [END_COT_EXT]
- */
 /**
  * Payments module
  *
  * @package payments
- * @version 1.1.2
- * @author CMSWorks Team
- * @copyright Copyright (c) CMSWorks.ru
+ * @author CMSWorks Team, Kalnov Alexey
+ * @copyright (c) CMSWorks.ru, Kalnov Alexey https://lily-software.com
  * @license BSD
  */
 
+use cot\modules\payments\dictionaries\PaymentDictionary;
+
 (defined('COT_CODE') && defined('COT_ADMIN')) or die('Wrong URL.');
 
-list($usr['auth_read'], $usr['auth_write'], $usr['isadmin']) = cot_auth('payments', 'any');
-cot_block($usr['isadmin']);
+[Cot::$usr['auth_read'], Cot::$usr['auth_write'], Cot::$usr['isadmin']] = cot_auth('payments', 'any');
+cot_block(Cot::$usr['isadmin']);
 
 $p = cot_import('p', 'G', 'ALP');
 $sq = cot_import('sq', 'P', 'TXT');
@@ -28,10 +29,10 @@ $t = new XTemplate(cot_tplfile('payments.admin', 'module', true));
 
 require_once cot_incfile('payments', 'module');
 
-$adminpath[] = array(cot_url('admin', 'm=extensions'), $L['Extensions']);
-$adminpath[] = array(cot_url('admin', 'm=extensions&a=details&mod='.$m), $cot_modules[$m]['title']);
-$adminpath[] = array(cot_url('admin', 'm='.$m), $L['Administration']);
-$adminhelp = $L['adm_help_payments'];
+$adminPath[] = array(cot_url('admin', 'm=extensions'), $L['Extensions']);
+$adminPath[] = array(cot_url('admin', 'm=extensions&a=details&mod='.$m), $cot_modules[$m]['title']);
+$adminPath[] = array(cot_url('admin', 'm='.$m), $L['Administration']);
+//$adminHelp = $L['adm_help_payments'];
 
 if($p == 'payouts')
 {
@@ -109,66 +110,94 @@ if($p == 'payouts')
 		$t->parse('MAIN.PAYOUTS.PAYOUT_ROW');
 	}
 	$t->parse('MAIN.PAYOUTS');
-}
-elseif($p == 'transfers')
-{
-	
-	if($a == 'done' && isset($id)){
+} elseif($p == 'transfers') {
+	if ($a == 'done' && isset($id)) {
+		$transfer = Cot::$db->query(
+            'SELECT * FROM ' . Cot::$db->payments_transfers . ' AS t '
+			//. 'LEFT JOIN $db_users AS u ON u.user_id=t.trn_from '
+			. "WHERE trn_status='process' AND trn_id = :transferId",
+            ['transferId' => $id]
+        )->fetch();
 
-		$transfer = $db->query("SELECT * FROM $db_payments_transfers AS t
-			LEFT JOIN $db_users AS u ON u.user_id=t.trn_from
-			WHERE trn_status='process' AND trn_id=".$id)->fetch();
-
-		$rtransfer['trn_done'] = $sys['now'];
+		$rtransfer['trn_done'] = Cot::$sys['now'];
 		$rtransfer['trn_status'] = 'done';
 
-		$taxsumm = $transfer['trn_summ']*$cfg['payments']['transfertax']/100;
+        $feeAmount = 0;
+        if (!empty(Cot::$cfg['payments']['transfertax'])) {
+            $feeAmount = $transfer['trn_summ'] * ((float) Cot::$cfg['payments']['transfertax']) / 100;
+        }
 
-		if($cfg['payments']['transfertaxfromrecipient'])
-		{
-			$sendersumm = $transfer['trn_summ'];
-			$recipientsumm = $transfer['trn_summ'] - $taxsumm;
-		}
-		else 
-		{
-			$sendersumm = $transfer['trn_summ'] + $taxsumm;
-			$recipientsumm = $transfer['trn_summ'];
+        if (Cot::$cfg['payments']['transfertaxfromrecipient']) {
+			$senderAmount = $transfer['trn_summ'];
+			$recipientAmount = $transfer['trn_summ'] - $feeAmount;
+		} else {
+			$senderAmount = $transfer['trn_summ'] + $feeAmount;
+			$recipientAmount = $transfer['trn_summ'];
 		}
 
-		$recipient = $db->query("SELECT * FROM $db_users WHERE user_id=".$transfer['trn_to']." LIMIT 1")->fetch();
+        $sender = cot_user_data((int) $transfer['trn_from']);
+		$recipient = cot_user_data((int) $transfer['trn_to']);
+
+        $senderName = cot_user_full_name($sender);
+        if ($senderName !== $sender['user_name']) {
+            $senderName .= ' (' . $sender['user_name'] . ')';
+        }
+
+        $recipientName = cot_user_full_name($recipient);
+        if ($recipientName !== $recipient['user_name']) {
+            $recipientName .= ' (' . $recipient['user_name'] . ')';
+        }
 
 		$payinfo['pay_userid'] = $transfer['trn_to'];
-		$payinfo['pay_area'] = 'balance';
-		$payinfo['pay_code'] = $pid;
-		$payinfo['pay_summ'] = $recipientsumm;
-		$payinfo['pay_cdate'] = $sys['now'];
-		$payinfo['pay_pdate'] = $sys['now'];
-		$payinfo['pay_adate'] = $sys['now'];
-		$payinfo['pay_status'] = 'done';
+		$payinfo['pay_area'] = PaymentDictionary::PAYMENT_SOURCE_BALANCE;
+		//$payinfo['pay_code'] = $pid;
+		$payinfo['pay_summ'] = $recipientAmount;
+		$payinfo['pay_cdate'] = Cot::$sys['now'];
+		$payinfo['pay_pdate'] = Cot::$sys['now'];
+		$payinfo['pay_adate'] = Cot::$sys['now'];
+		$payinfo['pay_status'] = PaymentDictionary::STATUS_DONE;
 		$payinfo['pay_desc'] = sprintf($L['payments_balance_transfer_desc'], $transfer['user_name'], $recipient['user_name'], $transfer['trn_comment']);
 
-		$db->insert($db_payments, $payinfo);
-		$pid = $db->lastInsertId();
+        Cot::$db->insert(Cot::$db->payments, $payinfo);
+		$paymentId = Cot::$db->lastInsertId();
 		
-		if($pid)
-		{
-			// Отправка уведомления админу о переводе между пользователями
-			$subject = $L['payments_balance_transfer_recipient_subject'];
-			$body = sprintf($L['payments_balance_transfer_recipient_body'], $usr['name'], $recipient['user_name'], $transfer['trn_summ'], $taxsumm, $sendersumm, $recipientsumm, $cfg['payments']['valuta'], cot_date('d.m.Y в H:i', $sys['now']), $transfer['trn_comment']);
+		if ($paymentId) {
+			// Отправка уведомления получателю о переводе на его счет
+			$subject = Cot::$L['payments_balance_transfer_recipient_subject'];
+			$body = sprintf(
+                Cot::$L['payments_balance_transfer_recipient_body'],
+                $senderName,
+                $recipientName,
+                $transfer['trn_summ'],
+                $feeAmount,
+                $senderAmount,
+                $recipientAmount,
+                Cot::$cfg['payments']['valuta'],
+                cot_date('datetime_medium', Cot::$sys['now']),
+                $transfer['trn_comment']
+            );
 			cot_mail($recipient['user_email'], $subject, $body);
 
-			$db->update($db_payments_transfers, $rtransfer, "trn_id=".$id);
+            Cot::$db->update($db_payments_transfers, $rtransfer, 'trn_id = ' . $id);
+
+            /* === Hook === */
+            foreach (cot_getextplugins('payments.balance.transfer.done') as $pl) {
+                include $pl;
+            }
+            /* ===== */
 		}
 
 		cot_redirect(cot_url('admin', 'm=payments&p=transfers'));
 	}
 
-	if($a == 'cancel' && isset($id)){
-
-		$transfer = $db->query("SELECT * FROM $db_payments_transfers AS t
+	if ($a === 'cancel' && isset($id)) {
+		$transfer = $db->query(
+            "SELECT * FROM $db_payments_transfers AS t
 			LEFT JOIN $db_users AS u ON u.user_id=t.trn_from
 			LEFT JOIN $db_payments AS p ON p.pay_code=t.trn_id AND p.pay_area='transfer'
-			WHERE trn_status='process' AND trn_id=".$id)->fetch();
+			WHERE trn_id = ? AND trn_status = 'process'",
+            $id
+        )->fetch();
 
 		$rtransfer['trn_done'] = $sys['now'];
 		$rtransfer['trn_status'] = 'canceled';
@@ -232,25 +261,25 @@ elseif($p == 'transfers')
 		}
 	}
 	$t->parse('MAIN.TRANSFERS');
-}
-else
-{
-
-	list($pn, $d, $d_url) = cot_import_pagenav('d', $cfg['maxrowsperpage']);
+} else {
+	[$pn, $d, $d_url] = cot_import_pagenav('d', Cot::$cfg['maxrowsperpage']);
 	$id = cot_import('id', 'G', 'INT');
 
-	list($pg, $d, $durl) = cot_import_pagenav('d', $cfg['maxrowsperpage']);
+	[$pg, $d, $durl] = cot_import_pagenav('d', Cot::$cfg['maxrowsperpage']);
 
-	$where['status'] = "pay_status='done'";
-	$where['summ'] = 'pay_summ>0';
+    $paymentStatusesToShow = [
+        PaymentDictionary::STATUS_PAID,
+        PaymentDictionary::STATUS_DONE,
+    ];
 
-	if (!empty($sq))
-	{
+	$where['status'] = "pay_status IN ('" . implode("', '", $paymentStatusesToShow) . "')";
+	$where['summ'] = 'pay_summ > 0';
+
+	if (!empty($sq)) {
 		$where['search'] = "(u.user_name LIKE '%".$db->prep($sq)."%' OR u.user_email LIKE '%".$db->prep($sq)."%')";
 	}
 
-	if(isset($id))
-	{
+	if (isset($id)) {
 		$where['userid'] = 'pay_userid=' . $id;
 		$urr = $db->query("SELECT * FROM $db_users WHERE user_id=" . (int)$id)->fetch();
 		$t->assign(cot_generate_usertags($urr, 'USER_'));
@@ -270,53 +299,53 @@ else
 
 	$pagenav = cot_pagenav('admin', 'm=payments&id='.$id.'&sq='.$sq, $d, $totalitems, $cfg['maxrowsperpage']);
 
-	$t->assign(array(
-		'PAGENAV_PAGES' => $pagenav['main'],
-		'PAGENAV_PREV' => $pagenav['prev'],
-		'PAGENAV_NEXT' => $pagenav['next']
-	));
+    $t->assign(cot_generatePaginationTags($pagenav));
 
-	foreach($pays as $pay)
-	{
+    if (isset(Cot::$cfg['legacyMode']) && Cot::$cfg['legacyMode']) {
+        // @deprecated in 2.0.6
+        $t->assign([
+            'PAGENAV_PAGES' => $pagenav['main'],
+            'PAGENAV_PREV' => $pagenav['prev'],
+            'PAGENAV_NEXT' => $pagenav['next'],
+        ]);
+    }
+
+    foreach($pays as $pay) {
 		$t->assign(cot_generate_paytags($pay, 'PAY_ROW_'));
 		
-		if($pay['pay_userid'] > 0)
-		{
+		if ($pay['pay_userid'] > 0) {
 			$t->assign(cot_generate_usertags($pay, 'PAY_ROW_USER_'));
-		}
-		else
-		{
-			$t->assign(array(
+		} else {
+			$t->assign([
 				'PAY_ROW_USER_ID' => 0,
-				'PAY_ROW_USER_NICKNAME' => $L['Guest'],
-			));
+				'PAY_ROW_USER_NICKNAME' => Cot::$L['Guest'],
+			]);
 		}
 		
 		$t->parse('MAIN.PAYMENTS.PAY_ROW');	
 	}
-
-	if(!empty($id))
-	{
+    $where_string = '';
+	if (!empty($id)) {
 		$where_string = 'AND pay_userid='.$id;
 	}
-	$inbalance = $db->query("SELECT SUM(pay_summ) as summ FROM $db_payments AS p
+	$inbalance = Cot::$db->query("SELECT SUM(pay_summ) as summ FROM $db_payments AS p
 		WHERE pay_area='balance' AND pay_summ>0 $where_string AND pay_status='done'")->fetchColumn();
 
-	$outbalance = $db->query("SELECT SUM(pay_summ) as summ FROM $db_payments AS p
+	$outbalance = Cot::$db->query("SELECT SUM(pay_summ) as summ FROM $db_payments AS p
 		WHERE pay_area='balance' AND pay_summ<0 $where_string AND pay_status='done'")->fetchColumn();
 
-	$credit = $db->query("SELECT SUM(pay_summ) as summ FROM $db_payments AS p
+	$credit = Cot::$db->query("SELECT SUM(pay_summ) as summ FROM $db_payments AS p
 		WHERE pay_area!='balance' $where_string AND pay_status='done'")->fetchColumn();
 
-	$t->assign(array(
+	$t->assign([
 		'INBALANCE' => number_format($inbalance, 2, '.', ' '),
 		'OUTBALANCE' => number_format(abs($outbalance), 2, '.', ' '),
 		'BALANCE' => number_format($inbalance - abs($outbalance), 2, '.', ' '),
 		'CREDIT' => number_format($credit, 2, '.', ' '),
-	));
+	]);
 
 	$t->parse('MAIN.PAYMENTS');
 }
 
 $t->parse('MAIN');
-$adminmain = $t->text('MAIN');
+$adminMain = $t->text('MAIN');

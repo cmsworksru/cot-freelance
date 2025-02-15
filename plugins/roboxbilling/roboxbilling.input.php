@@ -18,10 +18,14 @@
 
 defined('COT_CODE') or die('Wrong URL.');
 
-if(($_GET['e'] == 'roboxbilling' || $_GET['r'] == 'roboxbilling') && $_SERVER['REQUEST_METHOD'] == 'POST' && $cfg['plugin']['roboxbilling']['enablepost'])
-{
+if(
+    (
+        (isset($_GET['e']) && $_GET['e'] == 'roboxbilling')
+        || (isset($_GET['r']) && $_GET['r'] == 'roboxbilling')
+    )
+    && $_SERVER['REQUEST_METHOD'] == 'POST'
+    && Cot::$cfg['plugin']['roboxbilling']['enablepost']
+) {
 	define('COT_NO_ANTIXSS', 1) ;
 	$cfg['referercheck'] = false;
 }
-
-?>

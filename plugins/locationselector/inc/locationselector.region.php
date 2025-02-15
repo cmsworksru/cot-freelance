@@ -108,8 +108,8 @@ $t->assign(array(
 	"COUNTRY_NAME" => $cot_countries[$country],
 ));
 
-$adminpath[] = array(cot_url('admin', 'm=other&p=locationselector&n=region&country=' . $country), $cot_countries[$country]);
+$adminPath[] = array(cot_url('admin', 'm=other&p=locationselector&n=region&country=' . $country), $cot_countries[$country]);
 
 $t->parse("MAIN");
-$plugin_body .= $t->text("MAIN");
+$pluginBody .= $t->text("MAIN");
 ?>

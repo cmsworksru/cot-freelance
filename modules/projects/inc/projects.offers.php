@@ -453,7 +453,7 @@ while ($offer = $sql->fetch())
 
 		$t_o->assign(array(
 			"ADDPOST_ACTION_URL" => cot_url('projects', 'id=' . $id . '&oid=' . $offer['offer_id'] . '&a=addpost'),
-			"ADDPOST_TEXT" => cot_textarea('posttext',  $offer_post['post_text'], 3, 60),
+			"ADDPOST_TEXT" => cot_textarea('posttext',  $offer_post['post_text'] ?? '', 3, 60),
 			"ADDPOST_OFFERID" => $offer['offer_id'],
 		));
 		$t_o->parse("MAIN.ROWS.POSTS.POSTFORM");
@@ -475,29 +475,38 @@ while ($offer = $sql->fetch())
 $addoffer_enabled = true;
 
 /* === Hook === */
-foreach (cot_getextplugins('projects.addofferform.main') as $pl)
-{
+foreach (cot_getextplugins('projects.addofferform.main') as $pl) {
 	include $pl;
 }
 /* ===== */
 
 $sql = $db->query("SELECT * FROM $db_projects_offers WHERE offer_pid=" . $id . " AND offer_userid=" . $usr['id'] . "");
-if ($sql->fetchColumn() == 0 && $addoffer_enabled && $usr['auth_offers'] && $usr['id'] != $item['item_userid'] && !($item['item_performer'] || $item['item_realized']))
-{
-	$t_o->assign(array(
-		"OFFER_FORM_COSTMIN" => cot_inputbox('text', 'costmin', $roffer['offer_cost_min'], 'size="7"'),
-		"OFFER_FORM_COSTMAX" => cot_inputbox('text', 'costmax', $roffer['offer_cost_max'], 'size="7"'),
-		"OFFER_FORM_TIMEMIN" => cot_inputbox('text', 'timemin', $roffer['offer_time_min'], 'size="7"'),
-		"OFFER_FORM_TIMEMAX" => cot_inputbox('text', 'timemax', $roffer['offer_time_max'], 'size="7"'),
-		"OFFER_FORM_TEXT" => cot_textarea('offertext', $roffer['offer_text'], 7, 40),
-		"OFFER_FORM_HIDDEN" =>  cot_checkbox(0, 'hidden', $L['offers_hide_offer']),
+if (
+    $sql->fetchColumn() == 0
+    && $addoffer_enabled
+    && $usr['auth_offers']
+    && $usr['id'] != $item['item_userid']
+    && !($item['item_performer'] || $item['item_realized'])
+) {
+	$t_o->assign([
+		"OFFER_FORM_COSTMIN" => cot_inputbox('text', 'costmin', $roffer['offer_cost_min'] ?? '', 'size="7"'),
+		"OFFER_FORM_COSTMAX" => cot_inputbox('text', 'costmax', $roffer['offer_cost_max'] ?? '', 'size="7"'),
+		"OFFER_FORM_TIMEMIN" => cot_inputbox('text', 'timemin', $roffer['offer_time_min'] ?? '', 'size="7"'),
+		"OFFER_FORM_TIMEMAX" => cot_inputbox('text', 'timemax', $roffer['offer_time_max'] ?? '', 'size="7"'),
+		"OFFER_FORM_TEXT" => cot_textarea('offertext', $roffer['offer_text'] ?? '', 7, 40),
+		"OFFER_FORM_HIDDEN" =>  cot_checkbox(0, 'hidden', Cot::$L['offers_hide_offer']),
 		"OFFER_FORM_ACTION_URL" => cot_url('projects', 'id=' . $id . '&a=addoffer'),
-		"OFFER_FORM_TIMETYPE" => cot_selectbox($timetype, 'timetype', array_keys($L['offers_timetype']), array_values($L['offers_timetype']), false),
-	));
+		"OFFER_FORM_TIMETYPE" => cot_selectbox(
+            $timetype ?? null,
+            'timetype',
+            array_keys(Cot::$L['offers_timetype']),
+            array_values(Cot::$L['offers_timetype']),
+            false
+        ),
+	]);
 
 	// Extra fields
-	foreach($cot_extrafields[$db_projects_offers] as $exfld)
-	{
+	foreach($cot_extrafields[$db_projects_offers] as $exfld) {
 		$uname = strtoupper($exfld['field_name']);
 		$exfld_val = cot_build_extrafields('roffer'.$exfld['field_name'], $exfld, $roffer['offer_'.$exfld['field_name']]);
 		$exfld_title = isset($L['offers_'.$exfld['field_name'].'_title']) ?  $L['offers_'.$exfld['field_name'].'_title'] : $exfld['field_description'];

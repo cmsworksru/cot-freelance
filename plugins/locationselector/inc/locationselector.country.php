@@ -57,6 +57,6 @@ if($jj == 0)
 	$t->parse("MAIN.NOROWS");
 }
 $t->parse("MAIN");
-$plugin_body .= $t->text("MAIN");
+$pluginBody .= $t->text("MAIN");
 
 ?>

@@ -42,8 +42,8 @@
 					<td>{USERS_REGISTER_PASSWORDREPEAT} *</td>
 				</tr>
 				<tr>
-					<td>{USERS_REGISTER_VERIFYIMG}</td>
-					<td>{USERS_REGISTER_VERIFYINPUT} *</td>
+					<td>{USERS_REGISTER_VERIFY_IMG}</td>
+					<td>{USERS_REGISTER_VERIFY_INPUT} *</td>
 				</tr>
 				<!-- IF {USERS_REGISTER_USERAGREEMENT} -->
 				<tr>
